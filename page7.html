@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Message Codé</title>
+  <link rel="stylesheet" href="responsive.css" />
+  <style>
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="team-name" id="teamDisplay">Équipe : ...</div>
+
+  <div class="score-box" id="scoreDisplay">Score : ...</div>
+
+  <div class="main-content">
+    <!-- Message animé -->
+    <div class="message-container" id="message-container"></div>
+
+    <!-- Réponse -->
+    <div id="response-container">
+      <input type="text" id="user-response" placeholder="Entrez votre réponse" />
+      <button onclick="checkAnswer()">Valider</button>
+      <button onclick="showHint()">Indice</button>
+      <button onclick="showMore()">En savoir plus</button>
+
+      <!-- Indice -->
+      <div id="hint-text" class="hidden-text">Leur noms est Pythéas et Euthymenes</div>
+
+      <!-- En savoir plus -->
+      <div id="more-text" class="hidden-text">
+        <p>
+          Victor Gélu, célèbre poète et chansonnier marseillais, fit de la protection de la
+          langue provençale le combat de sa vie. Adulé de son vivant, respecté après sa mort,
+          il inspira de nombreux poètes et écrivains tels que Marcel Pagnol ou encore Jorgi Reboul.
+          <br><br>
+          Paul Masson dit de lui :  
+          <em>« Sa vie fut un long tourment, bien qu'il eût l'âme d'un sage antique et une culture intellectuelle
+          suffisante pour mépriser les misères quotidiennes de l'existence : aussi ne faut-il pas être surpris que
+          ses poèmes laissent au lecteur une impression de sombre tristesse. Il avait assez souffert lui-même
+          pour comprendre les douleurs des miséreux et des révoltés (...). Mais il n'était nullement des leurs... »</em>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Score et nom d'équipe depuis URL
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonyme";
+    document.getElementById("teamDisplay").textContent = "Équipe : " + team;
+
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score : ${score}`;
+
+    // Message principal
+    const message = `
+    Oui Annibale, c'est bien Victor Gélu que nous avons croisé au café qui était hanté par l'idée de
+    périr tout entier. Il semblerait que son voeux soit exaucé. Une part de lui est devenue intemporelle.
+    Suivez son regard et rendez-vous à la place Villeneuve-Bargemon, où vous trouverez une statue à
+    l'effigie de deux grands explorateurs marseillais de l'antiquité. Leurs noms sont indiqués sur la
+    plaque, pourriez-vous me donner leurs initiales ? Elles participent à l'ouverture du cryptex.
+    `.trim();
+
+    const container = document.getElementById("message-container");
+    const responseContainer = document.getElementById("response-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+
+      const letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+      container.appendChild(letterSpan);
+
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${index % 2 === 0 ? "10px" : "-10px"}) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 2);
+
+      if (index === letters.length - 1) {
+        setTimeout(() => {
+          responseContainer.style.display = "block";
+        }, index * 2 + 1000);
+      }
+    }
+
+    letters.forEach((char, index) => createLetterAnimation(index, char));
+
+    // Vérification de la réponse
+    function checkAnswer() {
+      const userInput = document.getElementById("user-response").value.trim().toUpperCase();
+      if (userInput === "PE") {
+        window.location.href = `page8.html?score=${score}&team=${encodeURIComponent(team)}`;
+      } else {
+        alert("Mauvaise réponse, essayez encore !");
+      }
+    }
+
+    // Indice : s'affiche + -5 points une seule fois
+    let hintUsed = false;
+    function showHint() {
+      const hintText = document.getElementById("hint-text");
+      hintText.classList.add("parchment-effect");
+
+      if (!hintUsed) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score : ${score}`;
+        hintUsed = true;
+      }
+    }
+
+    // En savoir plus : toggle le texte
+    function showMore() {
+      const moreText = document.getElementById("more-text");
+      moreText.classList.toggle("parchment-effect");
+    }
+  </script>
+
+</body>
+</html>

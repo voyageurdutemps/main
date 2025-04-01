@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coded Message</title>
+  <link rel="stylesheet" href="responsive.css" />
+  <style>
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="team-name" id="teamDisplay">Team: ...</div>
+
+  <div class="score-box" id="scoreDisplay">Score: ...</div>
+
+  <div class="main-content">
+    <!-- Message -->
+    <div class="message-container" id="message-container"></div>
+
+    <!-- Answer field -->
+    <div id="response-container">
+      <input type="text" id="user-response" placeholder="Enter your answer" />
+      <button onclick="checkAnswer()">Validate</button>
+      <button onclick="showHint()">Hint</button>
+      <button onclick="showMore()">Learn more</button>
+
+      <!-- Hint -->
+      <div id="hint-text" class="hidden-text">This direction is associated with the magnetic pole of the Earth</div>
+
+      <!-- Learn more -->
+      <div id="more-text" class="hidden-text">
+        <p>
+          This house takes its name from its former owner, Bastien Cabre. The building,
+          almost 500 years old, has the unique feature of having been moved as a single block during
+          the summer of 1954 by a 90-degree angle, to be placed in alignment with Grand Rue, where it forms
+          the corner with Bonneterie Street. The names of both streets appear on the same wall of the house,
+          one engraved in stone and the other on a simple sign. A contradiction that summarizes its
+          location before its rotation and displacement. Its imposing facade and mullioned windows
+          led to its classification as a Historical Monument on May 2, 1941, with the rest being listed since 1926.<br><br>
+          This house, miraculously preserved since the 16th century, also escaped the Nazi plan to raze
+          the Old Port during the winter of 1943. The occupier, with the help of the Vichy regime, launched a vast plan to 
+          "clean up" the neighborhood: more than 20,000 Marseillais were expropriated, 1,642 deported and murdered, 
+          and 1,500 buildings dynamited.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get score and team name
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonymous";
+    document.getElementById("teamDisplay").textContent = "Team: " + team;
+
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score: ${score}`;
+
+    const message = `
+    Bonneterie Street, thank you dear friend.
+    The history of this house, which is the oldest in Marseille, is quite unique. In 1954, it was
+    moved a few meters and rotated 90 degrees to fit the neighborhood restructuring plan. It is also
+    one of the few houses to have survived the neighborhood's destruction by dynamiting in 1943, what luck!
+    Now go down Bonneterie Street and take the first right to reach
+    Place Victor Gélu. Find his plaque and tell me in which direction he is
+    looking.
+    `.trim();
+
+    const container = document.getElementById("message-container");
+    const responseContainer = document.getElementById("response-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+
+      const letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+      container.appendChild(letterSpan);
+
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${index % 2 === 0 ? "10px" : "-10px"}) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 2);
+
+      if (index === letters.length - 1) {
+        setTimeout(() => {
+          responseContainer.style.display = "block";
+        }, index * 2 + 1000);
+      }
+    }
+
+    letters.forEach((char, index) => createLetterAnimation(index, char));
+
+    function checkAnswer() {
+      const userInput = document.getElementById("user-response").value.trim().toUpperCase();
+      if (userInput === "NORTH") {
+        window.location.href = `page7english.html?score=${score}&team=${encodeURIComponent(team)}`;
+      } else {
+        alert("Wrong answer, try again!");
+      }
+    }
+
+    let hintUsed = false;
+    function showHint() {
+      const hintText = document.getElementById("hint-text");
+      hintText.classList.add("parchment-effect");
+
+      if (!hintUsed) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score: ${score}`;
+        hintUsed = true;
+      }
+    }
+
+    function showMore() {
+      const moreText = document.getElementById("more-text");
+      moreText.classList.toggle("parchment-effect");
+    }
+  </script>
+
+</body>
+</html>

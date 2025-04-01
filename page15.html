@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Message Codé</title>
+  <link rel="stylesheet" href="responsive.css" />
+  <style>
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    #question-container {
+      margin-top: 40px;
+    }
+
+    .hidden-text {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 2s ease-in-out, opacity 1.5s ease-in-out;
+      font-size: 18px;
+      margin-top: 20px;
+      text-align: justify;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+      font-family: "Courier New", monospace;
+    }
+
+    .parchment-effect {
+      opacity: 1 !important;
+      max-height: 1000px !important;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 18px;
+      border: 2px solid #FFD700;
+      background: black;
+      color: #FFD700;
+      text-align: center;
+      width: 300px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="score-box" id="scoreDisplay">Score : ...</div>
+  <div class="message-container" id="message-container"></div>
+
+  <div class="main-content">
+    <div id="question-container">
+      <p>
+        Cet ange a un nom, lequel ?
+      </p>
+      <input type="text" id="user-response" placeholder="Votre réponse ici" />
+      <br />
+      <button onclick="checkAnswer()">Valider</button>
+      <button onclick="showHint()">Indice</button>
+      <button onclick="showMore()">En savoir plus sur cette rue</button>
+
+      <!-- Indice -->
+      <div id="hint-text" class="hidden-text">
+        Son nom est écrit en noir sur le mur, au-dessus de son auréole.
+      </div>
+
+      <!-- En savoir plus -->
+      <div id="more-text" class="hidden-text">
+        <p>
+          Ce petit coin de Marseille, rendu célèbre par les nombreux tournages ayant eu lieu ici, était déjà
+          au XVIIIe siècle un lieu incontournable.
+          <br><br>
+          La place des 13 coins — autrefois appelée « place des 13 cantons » en référence à l'auberge tenue là par un Suisse —
+          était le lieu favori d'un personnage historique devenu quasiment légendaire : Casanova.
+          <br><br>
+          Il paraît que c'est ici que ce dernier aimait passer la nuit, en quête de quelques jeunes Marseillaises à séduire
+          pour assouvir ses besoins de conquête...
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score : ${score}`;
+
+    const message = `
+Annibal, le temps est une chose aussi magnifique qu'inquiétante… mais j'ai la forte impression
+que des forces bienveillantes sont avec nous.
+
+Rends-toi place des 13 coins et observe bien. Cherche, dans un rayon de vingt mètres,
+les traces qu'un ange aurait pu laisser en passant par là.
+
+Cet ange détient peut-être un outil qui permettra aux générations futures d'obtenir la clé du temps.
+
+Mais pour que je puisse l'activer, j'ai besoin de son nom…
+    `.trim();
+
+    const container = document.getElementById("message-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+      const letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+      container.appendChild(letterSpan);
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${index % 2 === 0 ? "10px" : "-10px"}) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 2);
+    }
+
+    letters.forEach((char, index) => createLetterAnimation(index, char));
+
+    function checkAnswer() {
+      const userInput = document.getElementById("user-response").value.trim().toUpperCase();
+      if (userInput === "GABIANCONO") {
+        window.location.href = "page16.html?score=" + score;
+      } else {
+        alert("Mauvaise réponse, essayez encore !");
+      }
+    }
+
+    function showHint() {
+      const hintText = document.getElementById("hint-text");
+      hintText.classList.add("parchment-effect");
+      if (!hintText.classList.contains("déjà-utilisé")) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score : ${score}`;
+        hintText.classList.add("déjà-utilisé");
+      }
+    }
+
+    function showMore() {
+      const moreText = document.getElementById("more-text");
+      moreText.classList.toggle("parchment-effect");
+    }
+  </script>
+
+</body>
+</html>

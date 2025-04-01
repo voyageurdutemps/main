@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matrix Hiéroglyphes - Trou Noir</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Egyptian+Hieroglyphs&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: black;
+      color: #FFD700;
+      font-family: 'Noto Sans Egyptian Hieroglyphs', 'Segoe UI Historic', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    h1 {
+      margin-top: 15vh;
+      font-size: 30px;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 18px;
+      border: 2px solid #FFD700;
+      background: black;
+      color: #FFD700;
+      text-align: center;
+      margin: 10px;
+    }
+    button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+    .matrix-animation {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background: black;
+      overflow: hidden;
+      z-index: -1;
+    }
+    canvas {
+      display: block;
+    }
+    .blackhole-transition {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle, black 10%, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0.5) 50%);
+      opacity: 0;
+      transition: opacity 2s ease-in-out, transform 3s ease-in-out;
+      transform: scale(1);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="matrix-animation">
+    <canvas id="matrix"></canvas>
+  </div>
+
+  <h1>🔒 Entrez le Code d'Accès et le Nom de votre Équipe</h1>
+  <button onclick="changerLangue()" id="langue-btn">English version</button>
+  <br>
+  <input type="text" id="team-name" placeholder="Nom de l'équipe">
+  <br>
+  <input type="text" id="code-input" placeholder="Code secret">
+  <br>
+  <button onclick="verifierCode()">Valider</button>
+
+  <div id="blackhole" class="blackhole-transition"></div>
+
+  <script>
+    let langue = "fr"; // par défaut
+
+    function changerLangue() {
+      langue = (langue === "fr") ? "en" : "fr";
+
+      // Mise à jour des textes
+      document.querySelector("h1").textContent = (langue === "fr") ?
+        "🔒 Entrez le Code d'Accès et le Nom de votre Équipe" :
+        "🔒 Enter the Access Code and Your Team Name";
+
+      document.getElementById("team-name").placeholder = (langue === "fr") ? "Nom de l'équipe" : "Team Name";
+      document.getElementById("code-input").placeholder = (langue === "fr") ? "Code secret" : "Secret Code";
+      document.getElementById("langue-btn").textContent = (langue === "fr") ? "English version" : "Version française";
+    }
+
+    function verifierCode() {
+      const codeSaisi = document.getElementById("code-input").value.trim();
+      const teamName = document.getElementById("team-name").value.trim();
+      const codeSecret = "1337";
+
+      if (!teamName) {
+        alert((langue === "fr") ? "N'oubliez pas de mettre un nom d'équipe." : "Don't forget to enter a team name.");
+        return;
+      }
+
+      if (codeSaisi !== codeSecret) {
+        alert((langue === "fr") ? "Code incorrect !" : "Incorrect code!");
+        return;
+      }
+
+      // Effet trou noir
+      document.getElementById("blackhole").style.opacity = "1";
+      document.getElementById("blackhole").style.transform = "scale(10)";
+      symbols.forEach(sym => {
+        sym.targetX = canvas.width / 2;
+        sym.targetY = canvas.height / 2;
+        sym.speed = 4;
+        sym.rotationSpeed = Math.random() * 10 + 5;
+      });
+
+      // Redirection selon la langue
+      setTimeout(() => {
+        const page = (langue === "fr") ? "page2.html" : "page2english.html";
+        window.location.href = `${page}?team=${encodeURIComponent(teamName)}`;
+      }, 3000);
+    }
+
+    // Animation Matrix
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+
+    const hieroglyphs = ["𓂀", "𓁨", "𓀀", "𓇳", "𓂋", "𓊽", "𓌡", "𓏤", "𓋹", "𓆸", "𓉻", "𓊢", "1720", "1789", "-993 av JC", "2125"];
+    const font_size = 20;
+    const columns = Math.floor(canvas.width / font_size);
+    const symbols = [];
+
+    for (let i = 0; i < columns; i++) {
+      symbols.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        char: hieroglyphs[Math.floor(Math.random() * hieroglyphs.length)],
+        speed: Math.random() * 2 + 1,
+        rotation: Math.random() * 360,
+        rotationSpeed: 0,
+        targetX: null,
+        targetY: null
+      });
+    }
+
+    function draw() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#FFD700";
+      ctx.font = font_size + "px 'Noto Sans Egyptian Hieroglyphs', 'Segoe UI Historic'";
+
+      symbols.forEach(sym => {
+        if (sym.targetX !== null && sym.targetY !== null) {
+          const dx = sym.targetX - sym.x;
+          const dy = sym.targetY - sym.y;
+          sym.x += dx * 0.05;
+          sym.y += dy * 0.05;
+          sym.rotation += sym.rotationSpeed;
+        } else {
+          sym.y += sym.speed;
+        }
+
+        if (sym.y > canvas.height) {
+          sym.y = -font_size;
+          sym.x = Math.random() * canvas.width;
+        }
+
+        ctx.save();
+        ctx.translate(sym.x, sym.y);
+        ctx.rotate(sym.rotation * Math.PI / 180);
+        ctx.fillText(sym.char, -font_size / 2, font_size / 2);
+        ctx.restore();
+      });
+    }
+
+    setInterval(draw, 30);
+  </script>
+
+</body>
+</html>

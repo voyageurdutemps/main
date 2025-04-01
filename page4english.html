@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coded Message</title>
+  <link rel="stylesheet" href="responsive.css">
+  <style>
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="team-name" id="teamDisplay">Team: ...</div>
+
+  <!-- Score -->
+  <div class="score-box" id="scoreDisplay">Score: ...</div>
+
+  <div class="main-content">
+    <!-- Message -->
+    <div class="message-container" id="message-container"></div>
+
+    <!-- Answer field -->
+    <div id="response-container">
+      <input type="text" id="user-response" placeholder="Enter your answer">
+      <button onclick="checkAnswer()">Validate</button>
+      <button onclick="showHint()">Hint</button>
+      <div id="hint-text" class="hidden-text">The square root of 9 </div>
+    </div>
+
+    <!-- Learn more -->
+    <div class="hidden-text parchment-effect" style="margin-top: 30px; max-height: none; opacity: 1;">
+      <strong>Learn more:</strong><br>
+      Annibale Evariste Breccia (July 18, 1876 - July 28, 1967) was an Italian archaeologist and Egyptologist. 
+      Specialist in Greek and Roman history, he directed the Alexandria Museum until 1931, 
+      then becoming a professor at the University of Pisa. 
+      Despite being affected by a serious illness in 1937, he continued to participate in archaeological excavations 
+      in Egypt and on major Greco-Roman sites until his death on July 28, 1967.
+    </div>
+  </div>
+
+  <script>
+    // Get score and team name from URL
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonymous";
+    document.getElementById("teamDisplay").textContent = "Team: " + team;
+
+    // Display score
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score: ${score}`;
+
+    const message = `
+    Hannibal, it's me your friend, if you're reading this message, it means I'm in a very bad
+    situation. I know you participated in the archaeological excavations of the ancient port
+    in 1967, so I think it will be easy for you to tell me how many fortified towers were
+    found on the site. Give me their number, and the algorithm will take you to the next
+    step
+    `.trim();
+
+    const container = document.getElementById("message-container");
+    const responseContainer = document.getElementById("response-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+
+      let letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+
+      container.appendChild(letterSpan);
+
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${index % 2 === 0 ? "10px" : "-10px"}) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 1);
+
+      if (index === letters.length - 1) {
+        setTimeout(() => {
+          responseContainer.style.display = "block";
+        }, index * 10 + 1000);
+      }
+    }
+
+    letters.forEach((char, index) => {
+      createLetterAnimation(index, char);
+    });
+
+    function checkAnswer() {
+      const userInput = document.getElementById("user-response").value.trim().toUpperCase();
+      if (userInput === "3") {
+        window.location.href = `page5english.html?score=${score}&team=${encodeURIComponent(team)}`;
+      } else {
+        alert("Wrong answer, try again!");
+      }
+    }
+
+    function showHint() {
+      const hintText = document.getElementById("hint-text");
+
+      hintText.classList.add("parchment-effect");
+
+      if (!hintText.classList.contains("already-used")) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score: ${score}`;
+        hintText.classList.add("already-used");
+      }
+    }
+  </script>
+
+</body>
+</html>

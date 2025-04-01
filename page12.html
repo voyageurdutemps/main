@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Message Codé</title>
+  <link rel="stylesheet" href="responsive.css" />
+  <style>
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    #question-container {
+      margin-top: 40px;
+    }
+
+    .hidden-text {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 2s ease-in-out, opacity 1.5s ease-in-out;
+      font-size: 18px;
+      margin-top: 20px;
+      text-align: justify;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+      font-family: "Courier New", monospace;
+    }
+
+    .parchment-effect {
+      opacity: 1 !important;
+      max-height: 1000px !important;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 18px;
+      border: 2px solid #FFD700;
+      background: black;
+      color: #FFD700;
+      text-align: center;
+      width: 300px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="team-name" id="teamDisplay">Équipe : ...</div>
+  <div class="score-box" id="scoreDisplay">Score : ...</div>
+
+  <div class="main-content">
+    <div class="message-container" id="message-container"></div>
+
+    <div id="question-container">
+      <p>
+        Sur la plaque devant la cathédrale, il y a un grand nombre de personnages entourant un homme d'église.
+        Leur nombre équivaut à une lettre de l'alphabet, laquelle ?
+      </p>
+      <input type="text" id="user-response" placeholder="Votre réponse ici" />
+      <br />
+      <button onclick="checkAnswer()">Valider</button>
+      <button onclick="showHint()">Indice</button>
+      <button onclick="showMore()">En savoir plus</button>
+
+      <!-- Indice -->
+      <div id="hint-text" class="hidden-text">
+        Si 5 = E alors 13 = ?
+      </div>
+
+      <!-- En savoir plus -->
+      <div id="more-text" class="hidden-text">
+        <p>
+          Le 25 mai 1720, le Grand Saint-Antoine, un navire revenant du Liban transportant une riche cargaison d'étoffes et de soieries
+          orientales, entame sa quarantaine à l'île Jarre. Neuf décès sont déjà déclarés à bord, mais des marchands influents
+          décident de faire décharger une partie de la cargaison au port avant la fin du délai.
+          <br /><br />
+          Les puces infectées par le bacille de la peste, cachées dans les tissus, contaminent rapidement Marseille. 
+          En quelques mois, 40 000 des 90 000 habitants de la ville périssent. Un tiers de la Provence est touché.
+          <br /><br />
+          Durant les jours les plus sombres, Monseigneur de Belsunce, évêque de Marseille, brave la mort pour secourir
+          les malades. Il devient une figure emblématique de courage et de dévouement.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonyme";
+    document.getElementById("teamDisplay").textContent = "Équipe : " + team;
+
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score : ${score}`;
+
+    const message = `
+Un puits, mais bien sûr ! C'est sûrement cela qu'avait voulu me montrer mon ami lors de la Grande Guerre.
+Nous cherchions des passages souterrains pour effectuer nos sauts dans le temps, et Marseille en est effectivement pourvu.
+
+Dans l'Antiquité comme au Moyen-Âge, l'eau courante était rare et dépendait d'aqueducs, souvent construits par les Romains.
+Mais ici, à Marseille, on stockait surtout l'eau de pluie dans des citernes creusées dans la roche.
+
+Celui-ci est l'un des rares à subsister de cette époque.
+
+Quant à l'Hospice de la Vieille Charité qui vous fait face — son nom est trompeur. Il n'était pas dédié à la charité... mais à l'enfermement.
+Les pauvres, les mendiants, les sans-papiers y étaient regroupés aux 17e et 18e siècles, contraints de travailler en échange
+d'un lit et d'un peu de nourriture. Drôle de charité...
+
+Descendez maintenant la rue, puis tournez à droite.
+
+Cherchez la plus grande église que vous puissiez trouver. Devant elle, une statue. Observez sa plaque…
+`.trim();
+
+    const container = document.getElementById("message-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+      const letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+      container.appendChild(letterSpan);
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${index % 2 === 0 ? "10px" : "-10px"}) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 2);
+    }
+
+    letters.forEach((char, index) => createLetterAnimation(index, char));
+
+    function checkAnswer() {
+      const userInput = document.getElementById("user-response").value.trim().toUpperCase();
+      if (userInput === "M") {
+        window.location.href = `page13.html?score=${score}&team=${encodeURIComponent(team)}`;
+      } else {
+        alert("Mauvaise réponse, essayez encore !");
+      }
+    }
+
+    function showHint() {
+      const hintText = document.getElementById("hint-text");
+      hintText.classList.add("parchment-effect");
+      if (!hintText.classList.contains("déjà-utilisé")) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score : ${score}`;
+        hintText.classList.add("déjà-utilisé");
+      }
+    }
+
+    function showMore() {
+      const moreText = document.getElementById("more-text");
+      moreText.classList.toggle("parchment-effect");
+    }
+  </script>
+
+</body>
+</html>

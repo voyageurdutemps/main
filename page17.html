@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fin du Jeu</title>
+  <link rel="stylesheet" href="responsive.css" />
+  <style>
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    body {
+      background-color: black;
+      color: #FFD700;
+      font-family: "Courier New", monospace;
+      padding: 20px;
+      text-align: center;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+
+    .message {
+      font-size: 20px;
+      margin: 30px auto;
+      max-width: 800px;
+    }
+
+    .hidden-text {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 1s ease-in-out, opacity 1s ease-in-out;
+      font-size: 18px;
+      margin: 20px auto;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+      text-align: justify;
+      max-width: 800px;
+    }
+
+    .parchment-effect {
+      opacity: 1 !important;
+      max-height: 1000px !important;
+    }
+
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="team-name" id="teamDisplay">Équipe : ...</div>
+
+  <div class="score-box" id="scoreDisplay">Score : ...</div>
+
+  <div class="main-content">
+    <div class="message">
+      <p><strong>Bravo, Annibal.</strong></p>
+      <p>Est-ce que le magasin est ouvert ?</p>
+      <button id="btn-oui" onclick="magasinOuvert()">Oui</button>
+      <button id="btn-non" onclick="magasinFerme()">Non</button>
+    </div>
+
+    <div id="texte-oui" class="hidden-text">
+      Va te présenter et donne-leur le mot de passe de ton cryptex.<br>
+      C'est un souvenir de Marseille que tu peux garder.<br>
+      Il me permettra un jour de jouer au casino et de regagner une clé du temps qui m'a été volée.<br>
+      <strong>Merci pour ton aide, cher ami.</strong>
+    </div>
+
+    <div id="texte-non" class="hidden-text">
+      C'est dommage ! Ce magasin regorge de souvenirs de la ville.<br>
+      Tu aurais peut-être trouvé chaussure à ton pied.<br>
+      <strong>Merci pour ton aide, cher ami.</strong>
+    </div>
+
+    <!-- BOUTON SUIVANT -->
+    <div class="message">
+      <button onclick="goNext()">➡️ Suivant</button>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonyme";
+    document.getElementById("teamDisplay").textContent = "Équipe : " + team;
+    document.getElementById("scoreDisplay").textContent = `Score : ${score}`;
+
+    function magasinOuvert() {
+      document.getElementById("texte-oui").classList.add("parchment-effect");
+      document.getElementById("btn-non").style.display = "none";
+    }
+
+    function magasinFerme() {
+      document.getElementById("texte-non").classList.add("parchment-effect");
+      document.getElementById("btn-oui").style.display = "none";
+    }
+
+    function goNext() {
+      // 👇 MODIFIE cette URL avec celle de TON Apps Script déployé
+      const scriptURL = "https://script.google.com/macros/s/AKfycbzVtTYSFIpq0CFPIiVmJZHGja2RLtNXyH-Ayny9RMqYEVhn9q3h6S8DujplNk52WHPYmg/exec";
+
+      fetch(scriptURL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          équipe: team,
+          score: score,
+          date: new Date().toLocaleString()
+        }),
+      });
+
+      // Redirige vers la page finale
+      window.location.href = `score.html?score=${score}&team=${team}`;
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Message Codé</title>
+  <link rel="stylesheet" href="responsive.css" />
+  <style>
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hidden-text {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 2s ease-in-out, opacity 1.5s ease-in-out;
+      font-size: 18px;
+      margin-top: 20px;
+      text-align: justify;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+      font-family: "Courier New", monospace;
+    }
+
+    .parchment-effect {
+      opacity: 1 !important;
+      max-height: 1000px !important;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="team-name" id="teamDisplay">Équipe : ...</div>
+
+  <div class="score-box" id="scoreDisplay">Score : ...</div>
+
+  <div class="main-content">
+    <div class="message-container" id="message-container"></div>
+
+    <button onclick="showMore()">En savoir plus sur la Major</button>
+    <div id="more-text" class="hidden-text">
+      <p>
+        La cathédrale Sainte-Marie-Majeure s'inscrit dans l'histoire de la cité phocéenne.
+        Sur son emplacement se situait le temple d'Artémis, protectrice de l'antique Massalia,
+        et c'est tout naturellement là que les premiers chrétiens édifient au Ve siècle un vaste baptistère,
+        puis leur cathédrale dont le chœur et une travée restent visibles à l'est.
+      </p>
+    </div>
+
+    <button onclick="goToNext()">READY !</button>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonyme";
+    document.getElementById("teamDisplay").textContent = "Équipe : " + team;
+
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score : ${score}`;
+
+    const message = `
+Monseigneur de Belsunce, représenté ici, est un véritable héros de Marseille. Il est entouré de 13 enfants
+qu'il aurait sauvé de la mort lors de la grande peste de 1720. Cet épisode tragique de l'histoire de la ville
+a marqué les mémoires, et ses héros sont encore célébrés chaque année.
+
+L'équivalent alphabétique de ce chiffre est la lettre M… comme Major. Comme Marseille.
+
+Tu as maintenant récolté assez d'indices pour tenter ta chance au cryptex.
+
+Mais sois prudent. L'algorithme, comme le cryptex, ne laisse aucune place à l'erreur.  
+Si tu te trompes… le mécanisme se refermera à jamais.
+
+Il faudra attendre qu'un autre passant tente sa chance.
+
+Prêt à commencer ?
+`.trim();
+
+    const container = document.getElementById("message-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+      const letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+      container.appendChild(letterSpan);
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${
+          index % 2 === 0 ? "10px" : "-10px"
+        }) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 2);
+    }
+
+    letters.forEach((char, index) => createLetterAnimation(index, char));
+
+    function goToNext() {
+      window.location.href = `page14.html?score=${score}&team=${encodeURIComponent(team)}`;
+    }
+
+    function showMore() {
+      const moreText = document.getElementById("more-text");
+      moreText.classList.toggle("parchment-effect");
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Message Codé</title>
+  <link rel="stylesheet" href="responsive.css" />
+  <style>
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    #question-container {
+      margin-top: 40px;
+    }
+
+    .hidden-text {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 2s ease-in-out, opacity 1.5s ease-in-out;
+      font-size: 18px;
+      margin-top: 20px;
+      text-align: justify;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+      font-family: "Courier New", monospace;
+    }
+
+    .parchment-effect {
+      opacity: 1 !important;
+      max-height: 1000px !important;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 18px;
+      border: 2px solid #FFD700;
+      background: black;
+      color: #FFD700;
+      text-align: center;
+      width: 300px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="team-name" id="teamDisplay">Équipe : ...</div>
+
+  <div class="score-box" id="scoreDisplay">Score : ...</div>
+  <div class="message-container" id="message-container"></div>
+
+  <div class="main-content">
+    <div id="question-container">
+      <p>
+        En face du Goéland, se trouvent des sardines en vacances. À quoi cela correspond-il à ton époque ?
+      </p>
+      <input type="text" id="user-response" placeholder="Votre réponse ici" />
+      <br />
+      <button onclick="checkAnswer()">Valider</button>
+      <button onclick="showHint()">Indice</button>
+      <button onclick="showMore()">En savoir plus</button>
+
+      <!-- Indice -->
+      <div id="hint-text" class="hidden-text">
+        Il s'appelle « Les sardines en vacances » et c'est un mot en 7 lettres qui commence par M.
+      </div>
+
+      <!-- En savoir plus -->
+      <div id="more-text" class="hidden-text">
+        <p>
+          Vous avez trouvé, félicitations ! <strong>Gabiancono</strong> signifie en provençal « le goéland idiot ».
+          Difficile de dire si l'artiste <strong>5H1N3</strong> a cherché à se moquer des touristes qui se prennent en photo
+          avec tout ce qu'ils trouvent, ou s'il cherche à honorer la mémoire des gabians, courageux combattants des airs
+          qui débarrassent Marseille de ses rats.
+          <br><br>
+          Maintenant que tu as trouvé l'ange, rappelle-toi de l'énigme du cryptex :
+          <br><br>
+          Mets-toi dans la peau du Goéland, puis va voir ses proies en vacances. Ne les mange pas, sois aimable et dis-leur ceci :
+          <br><br>
+          <em>"Quand le Gabian n'est pas là, les sardines sont en vacances."</em>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonyme";
+    document.getElementById("teamDisplay").textContent = "Équipe : " + team;
+
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score : ${score}`;
+
+    const message = `
+Vous avez trouvé, félicitations ! Gabiancono signifie en provençal « le goéland idiot ».
+Difficile de dire si l'artiste 5H1N3 a cherché à se moquer des touristes qui se prennent en photo
+avec tout ce qu'ils trouvent, ou s'il cherche à honorer la mémoire des gabians, courageux combattants des airs
+qui débarrassent Marseille de ses rats.
+
+Maintenant que tu as trouvé l'ange, rappelle-toi de l'énigme du cryptex :
+Mets-toi dans la peau du Goéland, puis va voir ses proies en vacances.
+Ne les mange pas, sois aimable et dis-leur ceci :
+« Quand le Gabian n'est pas là, les sardines sont en vacances. »
+
+En face du Goéland, se trouvent des sardines en vacances.
+À quoi cela correspond-il à ton époque ?
+    `.trim();
+
+    const container = document.getElementById("message-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+      const letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+      container.appendChild(letterSpan);
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${index % 2 === 0 ? "10px" : "-10px"}) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 2);
+    }
+
+    letters.forEach((char, index) => createLetterAnimation(index, char));
+
+    function checkAnswer() {
+      const userInput = document.getElementById("user-response").value.trim().toUpperCase();
+      if (userInput === "MAGASIN") {
+        window.location.href = `page17.html?score=${score}&team=${encodeURIComponent(team)}`;
+      } else {
+        alert("Mauvaise réponse, essayez encore !");
+      }
+    }
+
+    function showHint() {
+      const hintText = document.getElementById("hint-text");
+      hintText.classList.add("parchment-effect");
+      if (!hintText.classList.contains("déjà-utilisé")) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score : ${score}`;
+        hintText.classList.add("déjà-utilisé");
+      }
+    }
+
+    function showMore() {
+      const moreText = document.getElementById("more-text");
+      moreText.classList.toggle("parchment-effect");
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,122 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Courier New", monospace;
+    background: black;
+    color: #FFD700;
+    text-align: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  body {
+    padding-bottom: 200px; /* ou + si besoin */
+  }
+  
+  
+  /* Conteneur principal */
+  .message-container {
+    position: relative;
+    width: 90%;
+    max-width: 1000px;
+    height: auto;
+    padding: 20px;
+  }
+  
+  /* Lettres animées */
+  .letter {
+    position: absolute;
+    font-size: clamp(18px, 2vw, 26px);
+    opacity: 0;
+    transition: all 1s ease-in-out;
+  }
+  
+  /* Réponse */
+  #response-container {
+    display: none;
+    margin-top: 20px;
+    width: 90%;
+    max-width: 500px;
+  }
+  
+  /* Champs & boutons */
+  input, button {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    margin: 10px auto;
+    display: block;
+    background: black;
+    color: #FFD700;
+    border: 2px solid #FFD700;
+    box-sizing: border-box;
+  }
+  
+  button {
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  button:hover {
+    background: #FFD700;
+    color: black;
+  }
+  
+  /* Score */
+  .score-box {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(255, 215, 0, 0.1);
+    border: 2px solid #FFD700;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    z-index: 999;
+  }
+  
+  /* Indice caché */
+  .hidden-text {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 2s ease-in-out, opacity 1.5s ease-in-out;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    margin-top: 20px;
+    text-align: justify;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+    width: 100%;
+  }
+  
+  .hidden-text.parchment-effect {
+    opacity: 1 !important;
+    max-height: none !important; /* ← permet d’afficher tout le texte */
+  }
+  
+  
+  /* Mobile */
+  @media (max-width: 600px) {
+    .score-box {
+      top: 10px;
+      right: 10px;
+      font-size: 14px;
+      padding: 8px 12px;
+    }
+  
+    .letter {
+      font-size: 16px;
+    }
+  }
+  

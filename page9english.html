@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coded Message</title>
+  <link rel="stylesheet" href="responsive.css" />
+  <style>
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="team-name" id="teamDisplay">Team: ...</div>
+
+  <div class="score-box" id="scoreDisplay">Score: ...</div>
+
+  <div class="main-content">
+    <!-- Message -->
+    <div class="message-container" id="message-container"></div>
+
+    <!-- Answer field -->
+    <div id="response-container">
+      <input type="text" id="user-response" placeholder="Enter your answer" />
+      <button onclick="checkAnswer()">Validate</button>
+      <button onclick="showHint()">Hint</button>
+      <button onclick="showMore()">Learn more</button>
+
+      <!-- Hint -->
+      <div id="hint-text" class="hidden-text">
+        It is the only even prime number
+      </div>
+
+      <!-- Learn more -->
+      <div id="more-text" class="hidden-text">
+        <p>
+          Honoré Daumier is known for being one of the first great French caricaturists in the mid-19th century.
+          Also a talented sculptor and painter, his works reveal a keen observation of the human condition
+          and social issues of his time: poverty, injustices, political maneuvers, bigotry... nothing escaped him.
+          <br><br>
+          Charles Baudelaire said of him: <em>"one of the most important men, I will not say only of caricature,
+          but also of modern art"</em>.
+          <br><br>
+          The building behind his bust, now turned into an Intercontinental hotel, was once a great Marseille hospital.
+          Built starting in 1753, it replaced the old Hôtel-Dieu of 1593, the first hospital with exclusively secular staff in France.
+          It served for teaching medical and paramedical professions until 2006.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get score and team name
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonymous";
+    document.getElementById("teamDisplay").textContent = "Team: " + team;
+
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score: ${score}`;
+
+    // Main message
+    const message = `
+    Yes, Hannibal, little Honoré Daumier also has some statues in his likeness. He became
+    a great Marseille artist who, in his time, revolutionized the art of caricature. If you feel like it,
+    don't hesitate to learn more about this man: you will discover caricatures that will remind you of the
+    sacred and revolutionary fire that animated him during our conversations at the table.
+  
+    His statue stands in front of the Intercontinental Hotel. One day soon, it will become a casino but in our
+    time, as you know, it was a hospital. The first secular hospital in the region, meaning with
+    non-religious staff.
+    
+    Speaking of religion... it's time for you to go to the Church of Accoules,
+    located a few dozen meters to your left.
+ 
+    Sound, Hannibal... sound is of capital importance to me.
+    The bells of this church rhythm the city, but also time. To successfully calibrate a
+    temporal passage from my position, I need to be able to anticipate the regular sounds that these
+    bell towers produce in the era where you are.
+   
+    Can you tell me how many bells are still there today?
+    `.trim();
+
+    const container = document.getElementById("message-container");
+    const responseContainer = document.getElementById("response-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+
+      const letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+      container.appendChild(letterSpan);
+
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${
+          index % 2 === 0 ? "10px" : "-10px"
+        }) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 2);
+
+      if (index === letters.length - 1) {
+        setTimeout(() => {
+          responseContainer.style.display = "block";
+        }, index * 2 + 1000);
+      }
+    }
+
+    letters.forEach((char, index) => createLetterAnimation(index, char));
+
+    function checkAnswer() {
+      const userInput = document.getElementById("user-response").value.trim();
+      if (userInput === "2") {
+        window.location.href = `page10english.html?score=${score}&team=${encodeURIComponent(team)}`;
+      } else {
+        alert("Wrong answer, try again!");
+      }
+    }
+
+    let hintUsed = false;
+    function showHint() {
+      const hintText = document.getElementById("hint-text");
+      hintText.classList.add("parchment-effect");
+
+      if (!hintUsed) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score: ${score}`;
+        hintUsed = true;
+      }
+    }
+
+    function showMore() {
+      const moreText = document.getElementById("more-text");
+      moreText.classList.toggle("parchment-effect");
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Message Codé</title>
+  <link rel="stylesheet" href="responsive.css" />
+  <style>
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .choice-btns {
+      margin-top: 30px;
+    }
+
+    .choice-btns button {
+      margin: 10px;
+    }
+
+    #question-container {
+      margin-top: 20px;
+      display: none;
+    }
+
+    #alt-path {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .hidden-text {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 2s ease-in-out, opacity 1.5s ease-in-out;
+      font-size: 18px;
+      margin-top: 20px;
+      text-align: justify;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+      font-family: "Courier New", monospace;
+    }
+
+    .parchment-effect {
+      opacity: 1 !important;
+      max-height: 500px !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="team-name" id="teamDisplay">Équipe : ...</div>
+
+  <div class="score-box" id="scoreDisplay">Score : ...</div>
+
+  <div class="main-content">
+    <div class="message-container" id="message-container"></div>
+
+    <!-- Choix -->
+    <div class="choice-btns">
+      <button onclick="magasinOuvert()">Le magasin est ouvert</button>
+      <button onclick="magasinFerme()">Le magasin est fermé</button>
+    </div>
+
+    <!-- Question si magasin ouvert -->
+    <div id="question-container">
+      <p>Quelle est la date du début de la grande guerre ?</p>
+      <input type="text" id="funiculaire-response" placeholder="Votre réponse">
+      <br>
+      <button onclick="checkFuniculaire()">Valider</button>
+      <button onclick="showHint()">Indice</button>
+      <div id="hint-text" class="hidden-text">19.....</div>
+    </div>
+
+    <!-- Texte si magasin fermé -->
+    <div id="alt-path" class="hidden-text parchment-effect">
+      <p>
+        Curios est fermé. Une pancarte grince au vent : "Fermé jusqu'à nouvel ordre".  
+        Juste à côté, un message gravé :  
+        <em>"S'ils ne peuvent me lire, qu'ils me cherchent là où le silence parle."</em>  
+        C'est une évidence.  
+        L'Hospice de la Vieille Charité vous attend.  
+      </p>
+      <button onclick="goToNext()">Poursuivre</button>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonyme";
+    document.getElementById("teamDisplay").textContent = "Équipe : " + team;
+
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score : ${score}`;
+
+    const message = `
+Deux cloches, fort bien. Cela n'a donc pas changé. Merci pour ces précieuses observations.
+Saviez-vous qu'avant d'être une église, cet édifice était un temple dédié à Athéna ? Ce n'est pas un hasard : dans les anciennes cités méditerranéennes, les lieux de culte chrétiens remplaçaient souvent les temples païens, en conservant leur position stratégique dans la ville. On changeait les dieux, mais pas les fondations… Une manière habile d'ancrer de nouvelles croyances sans bouleverser l'ordre établi.
+Mais ne nous égarons pas. Pour franchir le prochain seuil temporel, j'ai besoin d'un point d'ancrage solide, d'un repère transversal aux époques.
+Je suis proche de le localiser. Il ne me manque qu'un détail, un signal, un élément visuel ou symbolique propre à votre époque, quelque chose qui confirmerait que le passage est stable.
+Il se pourrait que cette confirmation soit liée à un lieu particulier, une boutique ancienne connue pour collectionner les artefacts du passé. On raconte qu'une lettre perdue datant de la Grande Guerre — censée m'être destinée — y aurait été déposée. Une missive jugée suspecte, jamais livrée... et oubliée.
+Certains disent qu'elle aurait refait surface dans une échoppe étrange au 2 rue de l'Évêché. Son nom : CURIOS.
+Si le magasin est ouvert... entrez. Fouillez. Et si vous trouvez la lettre, lisez-la avec attention.
+Peut-être y trouverez-vous ce qu'il me manque pour finaliser ma traversée.
+Ensuite, nous pourrons poursuivre.
+Ou pas.
+`.trim();
+
+    const container = document.getElementById("message-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+      const letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+      container.appendChild(letterSpan);
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${index % 2 === 0 ? "10px" : "-10px"}) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 2);
+    }
+
+    letters.forEach((char, index) => createLetterAnimation(index, char));
+
+    function magasinOuvert() {
+      document.getElementById("question-container").style.display = "block";
+    }
+
+    function magasinFerme() {
+      document.getElementById("alt-path").style.display = "block";
+    }
+
+    function checkFuniculaire() {
+      const answer = document.getElementById("funiculaire-response").value.trim().toUpperCase();
+      if (answer === "1914") {
+        window.location.href = `page11.html?score=${score}&team=${encodeURIComponent(team)}`;
+      } else {
+        alert("Mauvaise réponse, essayez encore !");
+      }
+    }
+
+    function showHint() {
+      const hintText = document.getElementById("hint-text");
+      hintText.classList.add("parchment-effect");
+      if (!hintText.classList.contains("déjà-utilisé")) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score : ${score}`;
+        hintText.classList.add("déjà-utilisé");
+      }
+    }
+
+    function goToNext() {
+      window.location.href = `page11.html?score=${score}&team=${encodeURIComponent(team)}`;
+    }
+  </script>
+
+</body>
+</html>

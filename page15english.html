@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coded Message</title>
+  <link rel="stylesheet" href="responsive.css" />
+  <style>
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    #question-container {
+      margin-top: 40px;
+    }
+
+    .hidden-text {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 2s ease-in-out, opacity 1.5s ease-in-out;
+      font-size: 18px;
+      margin-top: 20px;
+      text-align: justify;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+      font-family: "Courier New", monospace;
+    }
+
+    .parchment-effect {
+      opacity: 1 !important;
+      max-height: 1000px !important;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 18px;
+      border: 2px solid #FFD700;
+      background: black;
+      color: #FFD700;
+      text-align: center;
+      width: 300px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="score-box" id="scoreDisplay">Score: ...</div>
+  <div class="message-container" id="message-container"></div>
+
+  <div class="main-content">
+    <div id="question-container">
+      <p>
+        This angel has a name, what is it?
+      </p>
+      <input type="text" id="user-response" placeholder="Your answer here" />
+      <br />
+      <button onclick="checkAnswer()">Validate</button>
+      <button onclick="showHint()">Hint</button>
+      <button onclick="showMore()">Learn more about this street</button>
+
+      <!-- Hint -->
+      <div id="hint-text" class="hidden-text">
+        His name is written in black on the wall, above his halo.
+      </div>
+
+      <!-- Learn more -->
+      <div id="more-text" class="hidden-text">
+        <p>
+          This little corner of Marseille, made famous by the many films shot here, was already
+          an essential place in the 18th century.
+          <br><br>
+          Place des 13 coins — formerly called "place des 13 cantons" in reference to the inn run there by a Swiss —
+          was the favorite place of a historical figure who became almost legendary: Casanova.
+          <br><br>
+          It seems this is where he liked to spend the night, seeking young Marseillaises to seduce
+          to satisfy his conquest needs...
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score: ${score}`;
+
+    const message = `
+Hannibal, time is as magnificent as it is unsettling... but I have a strong feeling
+that benevolent forces are with us.
+
+Go to Place des 13 coins and observe carefully. Look, within a radius of twenty meters,
+for traces that an angel might have left while passing through here.
+
+This angel may hold a tool that will allow future generations to obtain the key to time.
+
+But for me to activate it, I need his name...
+    `.trim();
+
+    const container = document.getElementById("message-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+      const letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+      container.appendChild(letterSpan);
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${index % 2 === 0 ? "10px" : "-10px"}) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 2);
+    }
+
+    letters.forEach((char, index) => createLetterAnimation(index, char));
+
+    function checkAnswer() {
+      const userInput = document.getElementById("user-response").value.trim().toUpperCase();
+      if (userInput === "GABIANCONO") {
+        window.location.href = "page16.html?score=" + score;
+      } else {
+        alert("Wrong answer, try again!");
+      }
+    }
+
+    function showHint() {
+      const hintText = document.getElementById("hint-text");
+      hintText.classList.add("parchment-effect");
+      if (!hintText.classList.contains("already-used")) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score: ${score}`;
+        hintText.classList.add("already-used");
+      }
+    }
+
+    function showMore() {
+      const moreText = document.getElementById("more-text");
+      moreText.classList.toggle("parchment-effect");
+    }
+  </script>
+
+</body>
+</html>

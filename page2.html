@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aventure - Étape 1</title>
+  <style>
+    body {
+      background-color: black;
+      color: #FFD700;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 50px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+    }
+
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="team-name" id="teamDisplay">Équipe : ...</div>
+
+  <div class="container">
+    <h2>Merci pour votre aide.</h2>
+    <p>À l’aide de votre smartphone, vous devriez pouvoir retrouver les chiffres du code pour ouvrir le cryptex et me libérer du temps.</p>
+    <p>Chaque étape vous amènera à voyager dans différents lieux historiques de Marseille...</p>
+    <p>La première énigme se trouve dans le mail que vous avez reçu. Bonne chance !</p>
+    <button onclick="startAdventure()">Commencer l'aventure</button>
+  </div>
+
+  <script>
+    // ✅ Récupération du nom d'équipe depuis l'URL
+    const params = new URLSearchParams(window.location.search);
+    const team = params.get("team") || "Anonyme";
+    document.getElementById("teamDisplay").textContent = "Équipe : " + team;
+
+    // ✅ Redirection avec le nom d'équipe transmis à la page suivante
+    function startAdventure() {
+      window.location.href = "page3.html?team=" + encodeURIComponent(team);
+    }
+  </script>
+
+</body>
+</html>

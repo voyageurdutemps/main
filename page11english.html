@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coded Message</title>
+  <link rel="stylesheet" href="responsive.css" />
+  <style>
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    #question-container {
+      margin-top: 40px;
+    }
+
+    .hidden-text {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 2s ease-in-out, opacity 1.5s ease-in-out;
+      font-size: 18px;
+      margin-top: 20px;
+      text-align: justify;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+      font-family: "Courier New", monospace;
+    }
+
+    .parchment-effect {
+      opacity: 1 !important;
+      max-height: 1000px !important;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 18px;
+      border: 2px solid #FFD700;
+      background: black;
+      color: #FFD700;
+      text-align: center;
+      width: 300px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="team-name" id="teamDisplay">Team: ...</div>
+  <div class="score-box" id="scoreDisplay">Score: ...</div>
+
+  <div class="main-content">
+    <div class="message-container" id="message-container"></div>
+
+    <div id="question-container">
+      <p>Can you tell me what this is?</p>
+      <input type="text" id="user-response" placeholder="Your answer here" />
+      <br />
+      <button onclick="checkAnswer()">Validate</button>
+      <button onclick="showHint()">Hint</button>
+      <button onclick="showMore()">Learn more</button>
+
+      <!-- Hint -->
+      <div id="hint-text" class="hidden-text">
+        A pit, hole, or conduit built in the ground to exploit an underground water resource.
+      </div>
+
+      <!-- Learn more -->
+      <div id="more-text" class="hidden-text">
+        <p>
+          To house and gather beggars and vagabonds, who were very numerous at the beginning of the 17th century following the royal edict
+          on the confinement of the poor, the Marseille city council decided on December 8, 1622 to confine, in a proper place,
+          the poor natives of Marseille. It wasn't until 1671 that the construction of the building began under the direction
+          of architect Pierre Puget, a child of the neighborhood who became one of Louis XIV's favorites.
+          <br /><br />
+          This building, a kind of prison for the poor, also served as an asylum for the elderly and indigent until the 19th century.
+          In the 1940-1950s, nearly 150 families lived there, assisted by about thirty Little Sisters of the Poor.
+          In 1962, the building was closed and then listed. A series of restoration campaigns were launched to restore it.
+          Today, it houses several cultural structures, including the Mediterranean Archaeology Museum — free,
+          like many Marseille museums.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonymous";
+    document.getElementById("teamDisplay").textContent = "Team: " + team;
+
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score: ${score}`;
+
+    const message = `
+Continue then to Place de la Charité.
+In front of the Hospice entrance, you will see a small hollow structure, covered by an iron plate.
+\u{1F52D} Can you tell me what this is? I need it to lock in my next temporal trajectory.
+`.trim();
+
+    const container = document.getElementById("message-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+      const letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+      container.appendChild(letterSpan);
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${index % 2 === 0 ? "10px" : "-10px"}) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 2);
+    }
+
+    letters.forEach((char, index) => createLetterAnimation(index, char));
+
+    function checkAnswer() {
+      const userInput = document.getElementById("user-response").value.trim().toUpperCase();
+      if (userInput === "WELL") {
+        window.location.href = `page12english.html?score=${score}&team=${encodeURIComponent(team)}`;
+      } else {
+        alert("Wrong answer, try again!");
+      }
+    }
+
+    function showHint() {
+      const hintText = document.getElementById("hint-text");
+      hintText.classList.add("parchment-effect");
+      if (!hintText.classList.contains("already-used")) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score: ${score}`;
+        hintText.classList.add("already-used");
+      }
+    }
+
+    function showMore() {
+      const moreText = document.getElementById("more-text");
+      moreText.classList.toggle("parchment-effect");
+    }
+  </script>
+
+</body>
+</html>

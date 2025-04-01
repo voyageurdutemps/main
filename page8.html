@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Message Codé</title>
+  <link rel="stylesheet" href="responsive.css" />
+  <style>
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="team-name" id="teamDisplay">Équipe : ...</div>
+
+  <div class="score-box" id="scoreDisplay">Score : ...</div>
+
+  <div class="main-content">
+    <!-- Message animé -->
+    <div class="message-container" id="message-container"></div>
+
+    <!-- Réponse -->
+    <div id="response-container">
+      <input type="text" id="user-response" placeholder="Entrez votre réponse" />
+      <button onclick="checkAnswer()">Valider</button>
+      <button onclick="showHint()">Indice</button>
+      <button onclick="showMore()">En savoir plus</button>
+
+      <!-- Indice -->
+      <div id="hint-text" class="hidden-text">Ce nombre est divisible par 7 et par 10</div>
+
+      <!-- En savoir plus -->
+      <div id="more-text" class="hidden-text">
+        <p>
+          Les fouilles archéologiques de la place Villeneuve-Bargemon en 2006 ont mis au
+          jour des hangars à navires de guerre qu'on appelle « néoria » en grec ancien. Remplacés à l'époque
+          romaine par des thermes publics, on peut encore en voir la trace aujourd'hui par la présence de pierre de grand
+          appareil au milieu de la place.
+          <br><br>
+          C'est peut-être d'ici que partirent les célèbres explorateurs marseillais du 4e siècle av. J.-C. : Pythéas et
+          Euthymenes. Le premier est connu pour avoir découvert l'Islande pour les Grecs, bien que cela soit difficile
+          à prouver en l'absence de sources directes. Sa description très précise des aurores boréales laisse pourtant
+          penser que son récit est crédible.
+          <br><br>
+          Euthymenes, tout aussi célèbre en son temps, aurait atteint l'embouchure du fleuve Sénégal.
+          Certains historiens suggèrent même qu'il aurait découvert le fleuve Congo, 2000 ans avant les Portugais,
+          mais ses récits ont été perdus dans le temps...
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Récupération du score et du nom d'équipe
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonyme";
+    document.getElementById("teamDisplay").textContent = "Équipe : " + team;
+
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score : ${score}`;
+
+    const message = `
+    Bravo ! Un P et un E sont en effet nécessaires pour ouvrir le cryptex.
+    Ce sont les initiales de Pythéas et Euthymenes qui étaient dans l'antiquité de grands explorateurs, 
+    des voyageurs comme toi et moi, qui ont découvert l'Islande et le Sénégal pour la ville de Marseille. 
+    Ce monument honore leur mémoire. La place où vous vous trouvez était dans l'antiquité le lieu où les 
+    marseillais entreposaient leurs navires de guerre, à l'abri des remparts, au cas-où des ennemis 
+    tenteraient de prendre la ville par la mer.
+    <br><br>
+    Si vous remontez la place en direction du seul hôpital laïc de l'époque où nous nous sommes
+    rencontrés, maintenant devenu un hôtel, vous trouverez une autre statue, en bronze cette fois.
+    Donnez l'âge exact de sa mort, cela permettra à l'algorithme temporel de vous mener vers la
+    prochaine énigme.
+    `.trim();
+
+    const container = document.getElementById("message-container");
+    const responseContainer = document.getElementById("response-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+
+      const letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+      container.appendChild(letterSpan);
+
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${index % 2 === 0 ? "10px" : "-10px"}) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 2);
+
+      if (index === letters.length - 1) {
+        setTimeout(() => {
+          responseContainer.style.display = "block";
+        }, index * 2 + 1000);
+      }
+    }
+
+    letters.forEach((char, index) => createLetterAnimation(index, char));
+
+    // Vérification de la réponse
+    function checkAnswer() {
+      const userInput = document.getElementById("user-response").value.trim().toUpperCase();
+      if (userInput === "70") {
+        window.location.href = `page9.html?score=${score}&team=${encodeURIComponent(team)}`;
+      } else {
+        alert("Mauvaise réponse, essayez encore !");
+      }
+    }
+
+    // Indice avec pénalité
+    let hintUsed = false;
+    function showHint() {
+      const hintText = document.getElementById("hint-text");
+      hintText.classList.add("parchment-effect");
+      if (!hintUsed) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score : ${score}`;
+        hintUsed = true;
+      }
+    }
+
+    // En savoir plus
+    function showMore() {
+      const moreText = document.getElementById("more-text");
+      moreText.classList.toggle("parchment-effect");
+    }
+  </script>
+
+</body>
+</html>

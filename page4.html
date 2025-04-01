@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Message Codé</title>
+  <link rel="stylesheet" href="responsive.css">
+  <style>
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="team-name" id="teamDisplay">Équipe : ...</div>
+
+  <!-- Score -->
+  <div class="score-box" id="scoreDisplay">Score : ...</div>
+
+  <div class="main-content">
+    <!-- Message -->
+    <div class="message-container" id="message-container"></div>
+
+    <!-- Champ de réponse -->
+    <div id="response-container">
+      <input type="text" id="user-response" placeholder="Entrez votre réponse">
+      <button onclick="checkAnswer()">Valider</button>
+      <button onclick="showHint()">Indice</button>
+      <div id="hint-text" class="hidden-text">La racine carré de 9</div>
+    </div>
+
+    <!-- En savoir plus -->
+    <div class="hidden-text parchment-effect" style="margin-top: 30px; max-height: none; opacity: 1;">
+      <strong>En savoir plus :</strong><br>
+      Annibale Evariste Breccia (18 juillet 1876 - 28 juillet 1967) est un archéologue et égyptologue italien. 
+      Spécialiste d'histoire grecque et romaine, il a dirigé le musée d'Alexandrie jusqu'en 1931, 
+      pour devenir ensuite professeur à l'université de Pise. 
+      Atteint d'une maladie grave en 1937, il a pourtant continué à participer à des fouilles archéologiques 
+      en Égypte et sur les grands sites gréco-romains jusqu'à sa mort le 28 juillet 1967.
+    </div>
+  </div>
+
+  <script>
+    // Récupération du score et du nom d'équipe depuis l'URL
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonyme";
+    document.getElementById("teamDisplay").textContent = "Équipe : " + team;
+
+    // Affichage score
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score : ${score}`;
+
+    const message = `
+    Annibale, c'est moi votre ami, si vous lisez ce message, c'est que je suis en très mauvaise
+    posture. Je sais que vous avez participé aux fouilles archéologiques du port
+    antique en 1967, aussi je pense qu'il vous sera facile de me dire combien de tours fortifiées ont
+    été
+    trouvées sur le site. Donnez-moi leur nombre, et l'algorithme vous emmènera à la prochaine
+    étape
+    `.trim();
+
+    const container = document.getElementById("message-container");
+    const responseContainer = document.getElementById("response-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+
+      let letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+
+      container.appendChild(letterSpan);
+
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${index % 2 === 0 ? "10px" : "-10px"}) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 1);
+
+      if (index === letters.length - 1) {
+        setTimeout(() => {
+          responseContainer.style.display = "block";
+        }, index * 10 + 1000);
+      }
+    }
+
+    letters.forEach((char, index) => {
+      createLetterAnimation(index, char);
+    });
+
+    function checkAnswer() {
+      const userInput = document.getElementById("user-response").value.trim().toUpperCase();
+      if (userInput === "3") {
+        window.location.href = `page5.html?score=${score}&team=${encodeURIComponent(team)}`;
+      } else {
+        alert("Mauvaise réponse, essayez encore !");
+      }
+    }
+
+    function showHint() {
+      const hintText = document.getElementById("hint-text");
+
+      hintText.classList.add("parchment-effect");
+
+      if (!hintText.classList.contains("déjà-utilisé")) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score : ${score}`;
+        hintText.classList.add("déjà-utilisé");
+      }
+    }
+  </script>
+
+</body>
+</html>

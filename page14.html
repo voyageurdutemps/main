@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Code du cryptex</title>
+  <style>
+    body {
+      background-color: black;
+      color: #FFD700;
+      font-family: "Courier New", monospace;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+    .message-container {
+      width: 90%;
+      max-width: 800px;
+    }
+    .word {
+      font-size: 2rem;
+      letter-spacing: 1rem;
+    }
+    .letters button {
+      margin: 5px;
+      padding: 10px;
+      font-size: 1rem;
+    }
+    .hangman {
+      margin: 20px;
+      font-size: 1.5rem;
+      color: red;
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+    }
+    button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+    .score-box {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: rgba(255, 215, 0, 0.1);
+      border: 2px solid #FFD700;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 18px;
+      z-index: 999;
+    }
+    .hidden-text {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 2s ease-in-out, opacity 1.5s ease-in-out;
+      font-size: 18px;
+      margin-top: 20px;
+      text-align: justify;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+    }
+    .parchment-effect {
+      opacity: 1 !important;
+      max-height: 500px !important;
+    }
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="team-name" id="teamDisplay">Équipe : ...</div>
+  <div class="score-box" id="scoreDisplay">Score : ...</div>
+
+  <div class="main-content">
+    <h1>🔤 Trouve le Code du cryptex</h1>
+    <div class="word" id="wordDisplay">_ _ _ _ _ _</div>
+    <div class="letters" id="letterButtons"></div>
+    <div class="hangman" id="mistakes">Erreurs : 0/6</div>
+    <div class="message" id="message"></div>
+
+    <!-- Bouton : Indice -->
+    <button onclick="showHint()">Indice (-10pts)</button>
+
+    <!-- Texte caché pour l'indice -->
+    <div id="infoText" class="hidden-text">
+      Avant d'être une cathédrale, ce lieu en était un.
+    </div>
+
+    <!-- Boutons fin de partie -->
+    <div id="actionButtons"></div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonyme";
+    document.getElementById("teamDisplay").textContent = "Équipe : " + team;
+
+    const secretWord = "TEMPLE";
+    const maxMistakes = 6;
+    let guessedLetters = [];
+    let mistakes = 0;
+    let hintUsed = false;
+
+    const wordDisplay = document.getElementById("wordDisplay");
+    const letterButtons = document.getElementById("letterButtons");
+    const mistakesDisplay = document.getElementById("mistakes");
+    const messageDisplay = document.getElementById("message");
+    const actionButtons = document.getElementById("actionButtons");
+    const scoreDisplay = document.getElementById("scoreDisplay");
+
+    function updateWordDisplay() {
+      let display = "";
+      for (let letter of secretWord) {
+        display += guessedLetters.includes(letter) ? letter + " " : "_ ";
+      }
+      wordDisplay.textContent = display.trim();
+    }
+
+    function updateScore() {
+      score = Math.max(0, score);
+      scoreDisplay.textContent = `Score : ${score}`;
+    }
+
+    function handleGuess(letter) {
+      if (guessedLetters.includes(letter) || mistakes >= maxMistakes) return;
+
+      if (secretWord.includes(letter)) {
+        guessedLetters.push(letter);
+        updateWordDisplay();
+        checkWin();
+      } else {
+        mistakes++;
+        mistakesDisplay.textContent = `Erreurs : ${mistakes}/${maxMistakes}`;
+        updateScore();
+        if (mistakes >= maxMistakes) {
+          messageDisplay.textContent = `Ce n'est pas grave mon cher ami, tu vas pouvoir retenter ta chance mais attention, ce sera ta dernière chance.`;
+          showRetryButton();
+        }
+      }
+    }
+
+    function checkWin() {
+      const revealed = [...secretWord].every(l => guessedLetters.includes(l));
+      if (revealed) {
+        messageDisplay.textContent = "🎉 Bravo ! Si tu reçois ce message, c'est que tu as réussi à parfaitement te positionner sur les lignes du temps. Tu peux maintenant ouvrir le cryptex";
+        showNextButton();
+      }
+    }
+
+    function createButtons() {
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      for (let letter of alphabet) {
+        const btn = document.createElement("button");
+        btn.textContent = letter;
+        btn.onclick = () => handleGuess(letter);
+        letterButtons.appendChild(btn);
+      }
+    }
+
+    function showNextButton() {
+      const nextBtn = document.createElement("button");
+      nextBtn.textContent = "➡️ Étape suivante";
+      nextBtn.onclick = () => window.location.href = `page15.html?score=${score}&team=${encodeURIComponent(team)}`;
+      actionButtons.appendChild(nextBtn);
+    }
+
+    function showRetryButton() {
+      const retryBtn = document.createElement("button");
+      retryBtn.textContent = "🔁 Recommencer une dernière fois";
+      retryBtn.onclick = () => location.reload();
+      actionButtons.appendChild(retryBtn);
+    }
+
+    function showHint() {
+      document.getElementById("infoText").classList.add("parchment-effect");
+      if (!hintUsed) {
+        score = Math.max(0, score - 10); // Retire 10 points du score
+        updateScore();
+        hintUsed = true;
+      }
+    }
+
+    updateWordDisplay();
+    createButtons();
+    updateScore();
+  </script>
+
+</body>
+</html>

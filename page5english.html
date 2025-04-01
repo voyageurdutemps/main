@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coded Message</title>
+  <link rel="stylesheet" href="responsive.css" />
+  <style>
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="team-name" id="teamDisplay">Team: ...</div>
+
+  <div class="score-box" id="scoreDisplay">Score: ...</div>
+
+  <div class="main-content">
+    <!-- Message -->
+    <div class="message-container" id="message-container"></div>
+
+    <!-- Answer -->
+    <div id="response-container">
+      <input type="text" id="user-response" placeholder="Enter your answer" />
+      <button onclick="checkAnswer()">Validate</button>
+      <button onclick="showHint()">Hint</button>
+      <button onclick="showMore()">Learn more</button>
+
+      <!-- Hidden hint -->
+      <div id="hint-text" class="hidden-text">The name is written in stone.</div>
+
+      <!-- Hidden learn more -->
+      <div id="more-text" class="hidden-text">
+        <p>
+          Aristotle tells in "The Constitution of the Massaliotes" that Captain Protis,
+          a Greek from Phocaea, was one day invited to the banquet organized by Chief Nanos, who ruled
+          over the Provençal coast at that time. By chance, Nanos was celebrating his daughter's wedding
+          that evening, Gyptis. The local tradition wanted the future bride to choose her husband during the banquet
+          among the suitors, by giving him a cup. Gyptis preferred to offer it to Protis. King Nanos
+          then offered his daughter in marriage, with a dowry of land at the location of the current ancient port
+          of Massalia (Marseille). This founding myth reflects a historical reality: the Greeks, a people of
+          sailors, formed alliances with coastal peoples. Greek cities on the French coast
+          include Agde, Nice, Olbia, Toulon, Antibes...
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ✅ Get score and team name from URL
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonymous";
+    document.getElementById("teamDisplay").textContent = "Team: " + team;
+
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score: ${score}`;
+
+    const container = document.getElementById("message-container");
+    const responseContainer = document.getElementById("response-container");
+    const hintText = document.getElementById("hint-text");
+    const moreText = document.getElementById("more-text");
+
+    const message = `
+    Three towers, that's correct! I'm relieved that my fate is in your hands...
+    You are standing in front of the East entrance gate of the city of Marseille, built during the
+    Hellenistic period, in the 3rd century BC. In the 21st century, metal ship structures will be
+    installed at the location where the port was in antiquity. These are reconstructions of
+    ships found during excavations in Marseille at Place Jules-Verne. A ship was indeed found in the
+    port, but it was much larger, and Roman. It is said that this is where Protis and Gyptis
+    founded the city, 2600 years ago, but it's probably a legend... Let's continue.
+    Go north for 200 m, to find the Hôtel de Cabre. Today, it is located on Grand Rue.
+    But before, it was in another street. I need to know the name of this old
+    street. Could you give it to me?
+    `.trim();
+
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+
+      const letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+      container.appendChild(letterSpan);
+
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${
+          index % 2 === 0 ? "10px" : "-10px"
+        }) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 2);
+
+      if (index === letters.length - 1) {
+        setTimeout(() => {
+          responseContainer.style.display = "block";
+        }, index * 2 + 1000);
+      }
+    }
+
+    letters.forEach((char, index) => createLetterAnimation(index, char));
+
+    function checkAnswer() {
+      const userInput = document.getElementById("user-response").value.trim().toUpperCase();
+      if (userInput === "BONNETERIE") {
+        window.location.href = `page6english.html?score=${score}&team=${encodeURIComponent(team)}`;
+      } else {
+        alert("Wrong answer, try again!");
+      }
+    }
+
+    let hintUsed = false;
+    function showHint() {
+      hintText.classList.add("parchment-effect");
+      if (!hintUsed) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score: ${score}`;
+        hintUsed = true;
+      }
+    }
+
+    function showMore() {
+      moreText.classList.toggle("parchment-effect");
+    }
+  </script>
+
+</body>
+</html>
