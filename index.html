@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Les Voyageurs du Temps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Roboto Mono", monospace;
+      color: #FFD700;
+      background: url('voyageursdutemps.png') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    .overlay {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 60px 20px;
+      min-height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 3em;
+      color: #FFD700;
+    }
+
+    p {
+      font-size: 18px;
+      max-width: 800px;
+      margin: 10px auto 30px;
+    }
+
+    .instagram {
+      margin: 30px 0;
+    }
+
+    .instagram a {
+      color: #FFD700;
+      text-decoration: none;
+      font-weight: bold;
+      border: 2px solid #FFD700;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .instagram a:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+
+    table {
+      margin: 0 auto 50px;
+      border-collapse: collapse;
+      width: 90%;
+      max-width: 800px;
+      background-color: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    th, td {
+      padding: 12px 20px;
+      border: 1px solid #FFD700;
+    }
+
+    th {
+      background-color: #FFD700;
+      color: black;
+    }
+
+    tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    tr:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2em;
+      }
+
+      p {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <h1 id="title">Les Voyageurs du Temps</h1>
+    <p id="description1">Un escape game urbain, 100% en extérieur, pour jouer, résoudre des énigmes et se cultiver en découvrant la ville autrement.</p>
+    <p id="description2">Guidés par un archéologue ayant numérisé son savoir-faire dans l'application, chaque parcours est une aventure historique et ludique.</p>
+
+    <div class="instagram">
+      👉 <a href="https://www.instagram.com/les_voyageursdutemps/" target="_blank" id="instagramBtn">Suivez-nous sur Instagram</a>
+    </div>
+
+    <h2 id="rankingTitle">🏆 Classement des Voyageurs</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th id="teamHeader">Nom de l'équipe</th>
+          <th>Score</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody id="scoreTable">
+        <!-- Les scores seront insérés ici -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Changement de langue automatique
+    const userLang = navigator.language || navigator.userLanguage;
+    if (userLang.startsWith("en")) {
+      document.getElementById("title").textContent = "Time Travelers";
+      document.getElementById("description1").textContent = "An outdoor urban escape game to play, solve puzzles, and learn while discovering the city in a new way.";
+      document.getElementById("description2").textContent = "Guided by an archaeologist who digitized his knowledge into the app, each route is a cultural and playful adventure.";
+      document.getElementById("instagramBtn").textContent = "Follow us on Instagram";
+      document.getElementById("rankingTitle").textContent = "🏆 Time Travelers Leaderboard";
+      document.getElementById("teamHeader").textContent = "Team Name";
+    }
+
+    // Affichage des scores
+    const scoreTable = document.getElementById("scoreTable");
+    const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzVtTYSFIpq0CFPIiVmJZHGja2RLtNXyH-Ayny9RMqYEVhn9q3h6S8DujplNk52WHPYmg/exec";
+
+    async function fetchScores() {
+      try {
+        const res = await fetch(SHEET_API_URL);
+        const data = await res.json();
+        data.sort((a, b) => b.score - a.score);
+
+        data.forEach((entry, index) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${entry.team}</td>
+            <td>${entry.score}</td>
+            <td>${entry.date}</td>
+          `;
+          scoreTable.appendChild(row);
+        });
+      } catch (err) {
+        console.error("Erreur :", err);
+        scoreTable.innerHTML = `<tr><td colspan="4">Impossible de charger les scores.</td></tr>`;
+      }
+    }
+
+    fetchScores();
+  </script>
+</body>
+</html>
