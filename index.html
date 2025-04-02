@@ -4,12 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Les Voyageurs du Temps</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto+Mono&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      padding: 0;
       font-family: "Roboto Mono", monospace;
       color: #FFD700;
       background: url('voyageursdutemps.png') no-repeat center center fixed;
@@ -18,21 +16,26 @@
 
     .overlay {
       background: rgba(0, 0, 0, 0.8);
-      padding: 60px 20px;
+      padding: 40px 20px;
       min-height: 100vh;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     h1 {
       font-family: "Playfair Display", serif;
       font-size: 3em;
+      margin-bottom: 20px;
       color: #FFD700;
     }
 
     p {
       font-size: 18px;
       max-width: 800px;
-      margin: 10px auto 30px;
+      margin: 10px auto 20px;
+      line-height: 1.5;
     }
 
     .instagram {
@@ -55,17 +58,18 @@
     }
 
     table {
-      margin: 0 auto 50px;
+      margin-top: 30px;
       border-collapse: collapse;
-      width: 90%;
+      width: 100%;
       max-width: 800px;
       background-color: rgba(255, 255, 255, 0.05);
       box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
     }
 
     th, td {
-      padding: 12px 20px;
+      padding: 10px;
       border: 1px solid #FFD700;
+      word-break: break-word;
     }
 
     th {
@@ -81,6 +85,27 @@
       background-color: rgba(255, 255, 255, 0.1);
     }
 
+    .lang-switch {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .lang-switch button {
+      background: transparent;
+      color: #FFD700;
+      border: 1px solid #FFD700;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: "Roboto Mono", monospace;
+    }
+
+    .lang-switch button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+
     @media (max-width: 600px) {
       h1 {
         font-size: 2em;
@@ -89,10 +114,23 @@
       p {
         font-size: 16px;
       }
+
+      table, th, td {
+        font-size: 14px;
+      }
+
+      .lang-switch {
+        top: 10px;
+        right: 10px;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="lang-switch">
+    <button onclick="switchLanguage()">English version</button>
+  </div>
+
   <div class="overlay">
     <h1 id="title">Les Voyageurs du Temps</h1>
     <p id="description1">Un escape game urbain, 100% en extérieur, pour jouer, résoudre des énigmes et se cultiver en découvrant la ville autrement.</p>
@@ -120,18 +158,53 @@
   </div>
 
   <script>
-    // Changement de langue automatique
-    const userLang = navigator.language || navigator.userLanguage;
-    if (userLang.startsWith("en")) {
-      document.getElementById("title").textContent = "Time Travelers";
-      document.getElementById("description1").textContent = "An outdoor urban escape game to play, solve puzzles, and learn while discovering the city in a new way.";
-      document.getElementById("description2").textContent = "Guided by an archaeologist who digitized his knowledge into the app, each route is a cultural and playful adventure.";
-      document.getElementById("instagramBtn").textContent = "Follow us on Instagram";
-      document.getElementById("rankingTitle").textContent = "🏆 Time Travelers Leaderboard";
-      document.getElementById("teamHeader").textContent = "Team Name";
+    const translations = {
+      en: {
+        title: "Time Travelers",
+        description1: "An outdoor urban escape game to play, solve puzzles, and learn while discovering the city in a new way.",
+        description2: "Guided by an archaeologist who digitized his expertise into the app, each route is a cultural and playful adventure.",
+        instagramBtn: "Follow us on Instagram",
+        rankingTitle: "🏆 Time Travelers Leaderboard",
+        teamHeader: "Team Name",
+      },
+      fr: {
+        title: "Les Voyageurs du Temps",
+        description1: "Un escape game urbain, 100% en extérieur, pour jouer, résoudre des énigmes et se cultiver en découvrant la ville autrement.",
+        description2: "Guidés par un archéologue ayant numérisé son savoir-faire dans l'application, chaque parcours est une aventure historique et ludique.",
+        instagramBtn: "Suivez-nous sur Instagram",
+        rankingTitle: "🏆 Classement des Voyageurs",
+        teamHeader: "Nom de l'équipe",
+      }
+    };
+
+    let currentLang = 'fr';
+
+    function switchLanguage() {
+      currentLang = currentLang === 'fr' ? 'en' : 'fr';
+      updateLanguage();
     }
 
-    // Affichage des scores
+    function updateLanguage() {
+      const t = translations[currentLang];
+      document.getElementById("title").textContent = t.title;
+      document.getElementById("description1").textContent = t.description1;
+      document.getElementById("description2").textContent = t.description2;
+      document.getElementById("instagramBtn").textContent = t.instagramBtn;
+      document.getElementById("rankingTitle").textContent = t.rankingTitle;
+      document.getElementById("teamHeader").textContent = t.teamHeader;
+
+      const btn = document.querySelector(".lang-switch button");
+      btn.textContent = currentLang === "fr" ? "English version" : "Version française";
+    }
+
+    // Détection automatique au chargement
+    const userLang = navigator.language || navigator.userLanguage;
+    if (userLang.startsWith("en")) {
+      currentLang = "en";
+      updateLanguage();
+    }
+
+    // Chargement des scores
     const scoreTable = document.getElementById("scoreTable");
     const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzVtTYSFIpq0CFPIiVmJZHGja2RLtNXyH-Ayny9RMqYEVhn9q3h6S8DujplNk52WHPYmg/exec";
 
