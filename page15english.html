@@ -70,31 +70,41 @@
       border: 1px solid #FFD700;
       border-radius: 10px;
       font-size: 16px;
+      z-index: 1000;
+    }
+
+    .score-box {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      background-color: rgba(255, 215, 0, 0.1);
+      border: 2px solid #FFD700;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 18px;
+      z-index: 1000;
     }
   </style>
 </head>
 <body>
 
+  <div class="team-name" id="teamDisplay">Team: ...</div>
   <div class="score-box" id="scoreDisplay">Score: ...</div>
   <div class="message-container" id="message-container"></div>
 
   <div class="main-content">
     <div id="question-container">
-      <p>
-        This angel has a name, what is it?
-      </p>
+      <p>This angel has a name, what is it?</p>
       <input type="text" id="user-response" placeholder="Your answer here" />
       <br />
       <button onclick="checkAnswer()">Validate</button>
       <button onclick="showHint()">Hint</button>
       <button onclick="showMore()">Learn more about this street</button>
 
-      <!-- Hint -->
       <div id="hint-text" class="hidden-text">
         His name is written in black on the wall, above his halo.
       </div>
 
-      <!-- Learn more -->
       <div id="more-text" class="hidden-text">
         <p>
           This little corner of Marseille, made famous by the many films shot here, was already
@@ -113,8 +123,10 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     let score = parseInt(params.get("score")) || 100;
-    const scoreDisplay = document.getElementById("scoreDisplay");
-    scoreDisplay.textContent = `Score: ${score}`;
+    const team = params.get("team") || "Anonymous";
+
+    document.getElementById("teamDisplay").textContent = "Team: " + team;
+    document.getElementById("scoreDisplay").textContent = `Score: ${score}`;
 
     const message = `
 Hannibal, time is as magnificent as it is unsettling... but I have a strong feeling
@@ -153,7 +165,7 @@ But for me to activate it, I need his name...
     function checkAnswer() {
       const userInput = document.getElementById("user-response").value.trim().toUpperCase();
       if (userInput === "GABIANCONO") {
-        window.location.href = "page16.html?score=" + score;
+        window.location.href = "page16.html?score=" + score + "&team=" + encodeURIComponent(team);
       } else {
         alert("Wrong answer, try again!");
       }
@@ -164,7 +176,7 @@ But for me to activate it, I need his name...
       hintText.classList.add("parchment-effect");
       if (!hintText.classList.contains("already-used")) {
         score = Math.max(0, score - 5);
-        scoreDisplay.textContent = `Score: ${score}`;
+        document.getElementById("scoreDisplay").textContent = `Score: ${score}`;
         hintText.classList.add("already-used");
       }
     }
