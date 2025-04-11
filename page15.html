@@ -71,10 +71,22 @@
       border-radius: 10px;
       font-size: 16px;
     }
+
+    .score-box {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
 
+  <div class="team-name" id="teamDisplay">Équipe : ...</div>
   <div class="score-box" id="scoreDisplay">Score : ...</div>
   <div class="message-container" id="message-container"></div>
 
@@ -113,8 +125,10 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     let score = parseInt(params.get("score")) || 100;
-    const scoreDisplay = document.getElementById("scoreDisplay");
-    scoreDisplay.textContent = `Score : ${score}`;
+    const team = params.get("team") || "Anonyme";
+
+    document.getElementById("scoreDisplay").textContent = `Score : ${score}`;
+    document.getElementById("teamDisplay").textContent = `Équipe : ${team}`;
 
     const message = `
 Annibal, le temps est une chose aussi magnifique qu'inquiétante… mais j'ai la forte impression
@@ -153,7 +167,8 @@ Mais pour que je puisse l'activer, j'ai besoin de son nom…
     function checkAnswer() {
       const userInput = document.getElementById("user-response").value.trim().toUpperCase();
       if (userInput === "GABIANCONO") {
-        window.location.href = "page16.html?score=" + score;
+        // Transmet team + score à la prochaine page
+        window.location.href = `page16.html?score=${score}&team=${encodeURIComponent(team)}`;
       } else {
         alert("Mauvaise réponse, essayez encore !");
       }
@@ -164,7 +179,7 @@ Mais pour que je puisse l'activer, j'ai besoin de son nom…
       hintText.classList.add("parchment-effect");
       if (!hintText.classList.contains("déjà-utilisé")) {
         score = Math.max(0, score - 5);
-        scoreDisplay.textContent = `Score : ${score}`;
+        document.getElementById("scoreDisplay").textContent = `Score : ${score}`;
         hintText.classList.add("déjà-utilisé");
       }
     }
