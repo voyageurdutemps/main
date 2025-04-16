@@ -84,7 +84,7 @@
 
     <div id="question-container">
       <p>
-       Cet ange a un nom, lequel ?
+        Pouvez-vous me dire ce que c’est ?
       </p>
       <input type="text" id="user-response" placeholder="Votre réponse ici" />
       <br />
@@ -94,17 +94,17 @@
 
       <!-- Indice -->
       <div id="hint-text" class="hidden-text">
-  Son nom est écrit en noir sur le mur, au-dessus de son auréole.
+  Fosse, trou ou conduit aménagé dans le sol pour exploiter une ressource en eau souterraine.
       </div>
 
       <!-- En savoir plus -->
       <div id="more-text" class="hidden-text">
         <p>
-Ce petit coin de Marseille, rendu célèbre par les nombreux tournages ayant eu lieu ici, était déjà au XVIIIe siècle un lieu incontournable.
-
-La place des 13 coins — autrefois appelée « place des 13 cantons » en référence à l'auberge tenue là par un Suisse — était le lieu favori d'un personnage historique devenu quasiment légendaire : Casanova.
-
-Il paraît que c'est ici que ce dernier aimait passer la nuit, en quête de quelques jeunes Marseillaises à séduire pour assouvir ses besoins de conquête...
+Afin d'héberger et rassembler les mendiants et vagabonds, fort nombreux au début du 17e siècle à la suite de l'édit royal sur l'enfermement des pauvres, le conseil de la ville de Marseille décida le 8 décembre 1622 de renfermer, dans un lieu propre, les pauvres natifs de Marseille. 
+Ce n'est qu'en 1671 que la construction du bâtiment est entamée sous la direction de l'architecte Pierre Puget, un enfant du quartier devenu l'un des favoris de Louis XIV.
+Cet édifice, sorte de prison pour les pauvres, servit également d'asile pour les vieillards et indigents jusqu'au 19e siècle. Dans les années 1940-1950, près de 150 familles y vivaient, aidées par une trentaine de Petites Sœurs des Pauvres. 
+En 1962, le bâtiment est fermé puis classé. Une série de campagnes de restauration seront lancées pour le remettre en état. 
+Aujourd'hui, il accueille plusieurs structures culturelles, dont le musée d'archéologie méditerranéenne — gratuit, comme beaucoup de musées marseillais.
         </p>
       </div>
     </div>
@@ -120,14 +120,13 @@ Il paraît que c'est ici que ce dernier aimait passer la nuit, en quête de quel
     scoreDisplay.textContent = `Score : ${score}`;
 
     const message = `
-Monseigneur de Belsunce, représenté ici, est un véritable héros de Marseille. 
-Il est entouré de 13 enfants qu'il aurait sauvé de la mort lors de la grande peste de 1720. 
-Cet épisode tragique de l'histoire de la villea marqué les mémoires, et ses héros sont encore célébrés chaque année.
-L'équivalent alphabétique de ce chiffre est la lettre M… comme Major. Comme Marseille. Un signe que le temps a placé sur notre chemin commun cher ami. 
-
-Rendez-vous à la place des 13 coins et observez bien. Cherchez, dans un rayon de vingt mètres,les traces qu'un ange aurait pu laisser en passant par là.
-Cet ange détient peut-être un outil qui permettra aux générations futures d'obtenir la clé du temps.
-Mais pour que je puisse l'activer, j'ai besoin de son nom…
+Dérive temporelle réduite. Point de convergence localisé.
+Poursuivez ensuite jusqu’à la Place de la Charité.
+Devant l’entrée de l’Hospice, vous verrez une petite structure creuse, protégée par une plaque de fer. 🔭
+Ce n’est pas un simple vestige. C’est une balise temporelle passive, une mémoire qui capte les résonances du passé.
+J’en ai besoin pour verrouiller ma prochaine trajectoire temporelle.
+Marseille, depuis l’Antiquité, cache en son sous-sol des secrets d’eau et de pierre. Les citernes, les conduits romains, les strates du temps.
+Cet endroit a peut-être permis à d’autres que moi de voyager un jour… ou le permettra un jour.
 `.trim();
 
     const container = document.getElementById("message-container");
@@ -154,7 +153,7 @@ Mais pour que je puisse l'activer, j'ai besoin de son nom…
 
     function checkAnswer() {
       const userInput = document.getElementById("user-response").value.trim().toUpperCase();
-      if (userInput === "GABIANCONO") {
+      if (userInput === "PUITS") {
         window.location.href = `page13.html?score=${score}&team=${encodeURIComponent(team)}`;
       } else {
         alert("Mauvaise réponse, essayez encore !");
