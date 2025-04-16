@@ -69,13 +69,15 @@
   <div class="main-content">
     <div class="message-container" id="message-container"></div>
 
-    <button onclick="showMore()">Learn more about the Major</button>
+    <button onclick="showMore()">Learn more about la Vieille Charité</button>
     <div id="more-text" class="hidden-text">
       <p>
-        The Sainte-Marie-Majeure Cathedral is part of the history of the Phocaean city.
-        On its site stood the Temple of Artemis, protector of ancient Massalia,
-        and it was naturally there that the first Christians built a vast baptistery in the 5th century,
-        then their cathedral, of which the choir and one bay remain visible to the east.
+        In order to house and gather the beggars and vagrants, who were numerous at the beginning of the 17th century following the royal edict on the confinement of the poor, the Marseille city council decided on December 8, 1622, to confine the poor natives of Marseille to a proper place. 
+        It was not until 1671 that construction of the building began under the direction of the architect Pierre Puget, a local boy who became one of Louis XIV's favorites. 
+        This building, a sort of prison for the poor, also served as an asylum for the elderly and destitute until the 19th century. 
+        In the 1940s and 1950s, nearly 150 families lived there, helped by around thirty Little Sisters of the Poor. 
+        In 1962, the building was closed and then listed. A series of restoration campaigns were launched to restore it. 
+        Today, it houses several cultural structures, including the Museum of Mediterranean Archaeology — free, like many Marseille museums.
       </p>
     </div>
 
@@ -92,20 +94,21 @@
     scoreDisplay.textContent = `Score: ${score}`;
 
     const message = `
-Bishop de Belsunce, represented here, is a true hero of Marseille. He is surrounded by 13 children
-he is said to have saved from death during the great plague of 1720. This tragic episode in the city's history
-has left its mark on memories, and its heroes are still celebrated each year.
+A Well, of course! That's surely what my friend wanted to show me during the Great War. 
+We were looking for underground passages to make our leaps in time, and Marseille is indeed equipped with them. 
+In Antiquity as in the Middle Ages, running water was rare and depended on aqueducts, often built by the Romans. 
+But here in Marseille, rainwater was mainly stored in cisterns dug into the rock. 
+This one is one of the few to remain from that period. As for the Hospice de la Vieille Charité opposite you—its name is misleading. 
+It was not dedicated to charity... but to confinement. 
+The poor, beggars, and undocumented immigrants were gathered there in the 17th and 18th centuries, forced to work in exchange for a bed and a little food. Funny charity... 
 
-The alphabetical equivalent of this number is the letter M... like Major. Like Marseille.
-
-You have now gathered enough clues to try your luck with the cryptex.
-
-But be careful. The algorithm, like the cryptex, leaves no room for error.
-If you make a mistake... the mechanism will close forever.
-
-You'll have to wait for another passerby to try their luck.
+You've now collected enough clues to try your luck at the cryptex. 
+But be careful. 
+The algorithm, like the cryptex, leaves no room for error. 
+If you make a mistake... the mechanism will close forever. You'll have to wait for another passerby to try their luck. 
 
 Ready to begin?
+
 `.trim();
 
     const container = document.getElementById("message-container");
