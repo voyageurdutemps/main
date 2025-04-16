@@ -38,6 +38,42 @@
       line-height: 1.5;
     }
 
+    .version-card {
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      border-radius: 15px;
+      padding: 25px 30px;
+      margin: 20px 0;
+      max-width: 700px;
+      width: 100%;
+    }
+
+    .version-card h2 {
+      margin-top: 0;
+      color: #FFD700;
+    }
+
+    .version-buttons {
+      margin-top: 20px;
+    }
+
+    .version-buttons button {
+      background-color: #FFD700;
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: "Roboto Mono", monospace;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .version-buttons button:hover {
+      background-color: #FFA500;
+    }
+
     .instagram {
       margin: 30px 0;
     }
@@ -106,6 +142,35 @@
       color: black;
     }
 
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-radius: 8px;
+      z-index: 1000;
+    }
+
+    .popup p {
+      color: #FFD700;
+    }
+
+    .popup button {
+      background-color: #FFD700;
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .popup button:hover {
+      background-color: #FFA500;
+    }
+
     @media (max-width: 600px) {
       h1 {
         font-size: 2em;
@@ -136,12 +201,29 @@
     <p id="description1">Un escape game urbain, 100% en extérieur, pour jouer, résoudre des énigmes et se cultiver en découvrant la ville autrement.</p>
     <p id="description2">Guidés par un archéologue ayant numérisé son savoir-faire dans l'application, chaque parcours est une aventure historique et ludique.</p>
 
+    <!-- VERSION STANDARD -->
+    <div class="version-card">
+      <h2>Version Standard</h2>
+      <p>Accessible en ligne, également accompagnée par un guide, cette version est générique et idéale pour visiter la ville de manière ludique.</p>
+      <div class="version-buttons">
+        <button onclick="window.location.href='https://coclibel.com/serviceprod1/1744792720567x225102459940896770?lang=en_us&root=1744792538151x644333233948852200&serviceaccueillant=1744792538151x644333233948852200">Jouer à la version standard</button>
+      </div>
+    </div>
+
+    <!-- VERSION PREMIUM -->
+    <div class="version-card">
+      <h2>Version Premium</h2>
+      <p>Offre une expérience personnalisée avec un artefact unique, une histoire adaptée à vos demandes, des goodies à gagner, des passages secrets supplémentaires et des étapes en plus. Pour en bénéficier, l'utilisateur est invité à contacter les Voyageurs du Temps par email.</p>
+      <div class="version-buttons">
+        <button onclick="document.getElementById('premiumPopup').style.display='block'">Jouer à la version premium</button>
+      </div>
+    </div>
+
     <div class="instagram">
       👉 <a href="https://www.instagram.com/les_voyageursdutemps/" target="_blank" id="instagramBtn">Suivez-nous sur Instagram</a>
     </div>
 
     <h2 id="rankingTitle">🏆 Classement des Voyageurs</h2>
-
     <table>
       <thead>
         <tr>
@@ -152,59 +234,27 @@
         </tr>
       </thead>
       <tbody id="scoreTable">
-        <!-- Les scores seront insérés ici -->
+        <!-- Scores ici -->
       </tbody>
     </table>
   </div>
 
+  <div class="popup" id="premiumPopup">
+    <p>Pour jouer à la version premium, envoyez-nous les lieux que vous souhaitez impérativement visiter à <a href="mailto:levoyageursdutemps@gmail.com">levoyageursdutemps@gmail.com</a>. Nous vous contacterons sous 24h.</p>
+    <button onclick="closePopup()">Fermer</button>
+  </div>
+
   <script>
-    const translations = {
-      en: {
-        title: "Time Travelers",
-        description1: "An outdoor urban escape game to play, solve puzzles, and learn while discovering the city in a new way.",
-        description2: "Guided by an archaeologist who digitized his expertise into the app, each route is a cultural and playful adventure.",
-        instagramBtn: "Follow us on Instagram",
-        rankingTitle: "🏆 Time Travelers Leaderboard",
-        teamHeader: "Team Name",
-      },
-      fr: {
-        title: "Les Voyageurs du Temps",
-        description1: "Un escape game urbain, 100% en extérieur, pour jouer, résoudre des énigmes et se cultiver en découvrant la ville autrement.",
-        description2: "Guidés par un archéologue ayant numérisé son savoir-faire dans l'application, chaque parcours est une aventure historique et ludique.",
-        instagramBtn: "Suivez-nous sur Instagram",
-        rankingTitle: "🏆 Classement des Voyageurs",
-        teamHeader: "Nom de l'équipe",
-      }
-    };
-
-    let currentLang = 'fr';
-
     function switchLanguage() {
-      currentLang = currentLang === 'fr' ? 'en' : 'fr';
-      updateLanguage();
-    }
-
-    function updateLanguage() {
-      const t = translations[currentLang];
-      document.getElementById("title").textContent = t.title;
-      document.getElementById("description1").textContent = t.description1;
-      document.getElementById("description2").textContent = t.description2;
-      document.getElementById("instagramBtn").textContent = t.instagramBtn;
-      document.getElementById("rankingTitle").textContent = t.rankingTitle;
-      document.getElementById("teamHeader").textContent = t.teamHeader;
-
       const btn = document.querySelector(".lang-switch button");
-      btn.textContent = currentLang === "fr" ? "English version" : "Version française";
+      const fr = btn.textContent.includes("English");
+      btn.textContent = fr ? "Version française" : "English version";
     }
 
-    // Détection automatique au chargement
-    const userLang = navigator.language || navigator.userLanguage;
-    if (userLang.startsWith("en")) {
-      currentLang = "en";
-      updateLanguage();
+    function closePopup() {
+      document.getElementById("premiumPopup").style.display = "none";
     }
 
-    // Chargement des scores
     const scoreTable = document.getElementById("scoreTable");
     const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzVtTYSFIpq0CFPIiVmJZHGja2RLtNXyH-Ayny9RMqYEVhn9q3h6S8DujplNk52WHPYmg/exec";
 
@@ -213,20 +263,13 @@
         const res = await fetch(SHEET_API_URL);
         const data = await res.json();
         data.sort((a, b) => b.score - a.score);
-
         data.forEach((entry, index) => {
           const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${entry.team}</td>
-            <td>${entry.score}</td>
-            <td>${entry.date}</td>
-          `;
+          row.innerHTML = `<td>${index + 1}</td><td>${entry.team}</td><td>${entry.score}</td><td>${entry.date}</td>`;
           scoreTable.appendChild(row);
         });
       } catch (err) {
-        console.error("Erreur :", err);
-        scoreTable.innerHTML = `<tr><td colspan="4">Impossible de charger les scores.</td></tr>`;
+        scoreTable.innerHTML = `<tr><td colspan="4">Erreur de chargement.</td></tr>`;
       }
     }
 
