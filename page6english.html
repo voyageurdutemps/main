@@ -118,7 +118,7 @@
 
     function checkAnswer() {
       const userInput = document.getElementById("user-response").value.trim().toUpperCase();
-      if (userInput === "NORTH") {
+      if (userInput === "WEST") {
         window.location.href = `page7english.html?score=${score}&team=${encodeURIComponent(team)}`;
       } else {
         alert("Wrong answer, try again!");
