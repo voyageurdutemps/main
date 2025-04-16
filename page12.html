@@ -84,8 +84,7 @@
 
     <div id="question-container">
       <p>
-        Sur la plaque devant la cathédrale, il y a un grand nombre de personnages entourant un homme d'église.
-        Leur nombre équivaut à une lettre de l'alphabet, laquelle ?
+       Cet ange a un nom, lequel ?
       </p>
       <input type="text" id="user-response" placeholder="Votre réponse ici" />
       <br />
@@ -95,21 +94,17 @@
 
       <!-- Indice -->
       <div id="hint-text" class="hidden-text">
-        Si 5 = E alors 13 = ?
+  Son nom est écrit en noir sur le mur, au-dessus de son auréole.
       </div>
 
       <!-- En savoir plus -->
       <div id="more-text" class="hidden-text">
         <p>
-          Le 25 mai 1720, le Grand Saint-Antoine, un navire revenant du Liban transportant une riche cargaison d'étoffes et de soieries
-          orientales, entame sa quarantaine à l'île Jarre. Neuf décès sont déjà déclarés à bord, mais des marchands influents
-          décident de faire décharger une partie de la cargaison au port avant la fin du délai.
-          <br /><br />
-          Les puces infectées par le bacille de la peste, cachées dans les tissus, contaminent rapidement Marseille. 
-          En quelques mois, 40 000 des 90 000 habitants de la ville périssent. Un tiers de la Provence est touché.
-          <br /><br />
-          Durant les jours les plus sombres, Monseigneur de Belsunce, évêque de Marseille, brave la mort pour secourir
-          les malades. Il devient une figure emblématique de courage et de dévouement.
+Ce petit coin de Marseille, rendu célèbre par les nombreux tournages ayant eu lieu ici, était déjà au XVIIIe siècle un lieu incontournable.
+
+La place des 13 coins — autrefois appelée « place des 13 cantons » en référence à l'auberge tenue là par un Suisse — était le lieu favori d'un personnage historique devenu quasiment légendaire : Casanova.
+
+Il paraît que c'est ici que ce dernier aimait passer la nuit, en quête de quelques jeunes Marseillaises à séduire pour assouvir ses besoins de conquête...
         </p>
       </div>
     </div>
@@ -125,21 +120,14 @@
     scoreDisplay.textContent = `Score : ${score}`;
 
     const message = `
-Un puits, mais bien sûr ! C'est sûrement cela qu'avait voulu me montrer mon ami lors de la Grande Guerre.
-Nous cherchions des passages souterrains pour effectuer nos sauts dans le temps, et Marseille en est effectivement pourvu.
+Monseigneur de Belsunce, représenté ici, est un véritable héros de Marseille. 
+Il est entouré de 13 enfants qu'il aurait sauvé de la mort lors de la grande peste de 1720. 
+Cet épisode tragique de l'histoire de la villea marqué les mémoires, et ses héros sont encore célébrés chaque année.
+L'équivalent alphabétique de ce chiffre est la lettre M… comme Major. Comme Marseille. Un signe que le temps a placé sur notre chemin commun cher ami. 
 
-Dans l'Antiquité comme au Moyen-Âge, l'eau courante était rare et dépendait d'aqueducs, souvent construits par les Romains.
-Mais ici, à Marseille, on stockait surtout l'eau de pluie dans des citernes creusées dans la roche.
-
-Celui-ci est l'un des rares à subsister de cette époque.
-
-Quant à l'Hospice de la Vieille Charité qui vous fait face — son nom est trompeur. Il n'était pas dédié à la charité... mais à l'enfermement.
-Les pauvres, les mendiants, les sans-papiers y étaient regroupés aux 17e et 18e siècles, contraints de travailler en échange
-d'un lit et d'un peu de nourriture. Drôle de charité...
-
-Descendez maintenant la rue, puis tournez à droite.
-
-Cherchez la plus grande église que vous puissiez trouver. Devant elle, une statue. Observez sa plaque…
+Rendez-vous à la place des 13 coins et observez bien. Cherchez, dans un rayon de vingt mètres,les traces qu'un ange aurait pu laisser en passant par là.
+Cet ange détient peut-être un outil qui permettra aux générations futures d'obtenir la clé du temps.
+Mais pour que je puisse l'activer, j'ai besoin de son nom…
 `.trim();
 
     const container = document.getElementById("message-container");
@@ -166,7 +154,7 @@ Cherchez la plus grande église que vous puissiez trouver. Devant elle, une stat
 
     function checkAnswer() {
       const userInput = document.getElementById("user-response").value.trim().toUpperCase();
-      if (userInput === "M") {
+      if (userInput === "GABIANCONO") {
         window.location.href = `page13.html?score=${score}&team=${encodeURIComponent(team)}`;
       } else {
         alert("Mauvaise réponse, essayez encore !");
