@@ -84,8 +84,10 @@
 
     <div id="question-container">
       <p>
-        On the plaque in front of the cathedral, there are many figures surrounding a churchman.
-        Their number corresponds to a letter of the alphabet, which one?
+       Can you tell me what it is? 
+        Marseille, since ancient times, has hidden secrets of water and stone deep within its soil. 
+        Cisterns, Roman conduits, layers of time. 
+        This place may have allowed others to travel one day... or will one day.
       </p>
       <input type="text" id="user-response" placeholder="Your answer here" />
       <br />
@@ -95,21 +97,14 @@
 
       <!-- Hint -->
       <div id="hint-text" class="hidden-text">
-        If 5 = E then 13 = ?
+      Pit, hole or conduit constructed in the ground to exploit an underground water resource.
       </div>
 
-      <!-- Learn more -->
+      <!-- Learn more about la Major -->
       <div id="more-text" class="hidden-text">
         <p>
-          On May 25, 1720, the Grand Saint-Antoine, a ship returning from Lebanon carrying a rich cargo of fabrics and oriental silks,
-          began its quarantine at Jarre Island. Nine deaths were already reported on board, but influential merchants
-          decided to unload part of the cargo at the port before the end of the period.
-          <br /><br />
-          Fleas infected with the plague bacillus, hidden in the fabrics, quickly contaminated Marseille.
-          In a few months, 40,000 of the city's 90,000 inhabitants perished. A third of Provence was affected.
-          <br /><br />
-          During the darkest days, Bishop de Belsunce of Marseille braved death to help
-          the sick. He became an emblematic figure of courage and devotion.
+         The Cathedral of Saint Mary Major is a significant part of the history of the Phocaean city. 
+          On its site stood the temple of Artemis, protector of ancient Massalia, and it was quite naturally here that the first Christians built a vast baptistery in the 5th century, then their cathedral, the choir and a bay of which remain visible to the east.
         </p>
       </div>
     </div>
@@ -125,21 +120,11 @@
     scoreDisplay.textContent = `Score: ${score}`;
 
     const message = `
-    Un puits, which means a well, of course! That must be what my friend wanted to show me during the Great War.
-We were looking for underground passages for our time jumps, and Marseille is indeed well provided with them.
-
-In Antiquity as in the Middle Ages, running water was rare and depended on aqueducts, often built by the Romans.
-But here, in Marseille, rainwater was mainly stored in cisterns dug into the rock.
-
-This is one of the few remaining from that era.
-
-As for the Hospice of the Vieille Charité facing you — its name is misleading. It wasn't dedicated to charity... but to confinement.
-The poor, beggars, and undocumented were gathered there in the 17th and 18th centuries, forced to work in exchange
-for a bed and some food. Strange charity...
-
-Now go down the street, then turn right.
-
-Look for the largest church you can find. In front of it, a statue. Observe its plaque...
+    Reduced time drift. Keep this clue safe; it will allow you to open the cryptex. Then continue to Place de la Vieille Charité. 
+    To get there, pass by Marseille's famous pétanque courts, climb the steps to Place des 13 Coins, and continue straight ahead along Rue du Petit Puits. 
+    In front of the Hospice entrance, you will see a small, hollow structure, protected by an iron plate. 
+    🔭This is not a simple vestige. It is a passive temporal beacon, a memory that captures the resonances of the past. 
+    I need it to lock my next temporal trajectory.
 `.trim();
 
     const container = document.getElementById("message-container");
@@ -166,7 +151,7 @@ Look for the largest church you can find. In front of it, a statue. Observe its 
 
     function checkAnswer() {
       const userInput = document.getElementById("user-response").value.trim().toUpperCase();
-      if (userInput === "M") {
+      if (userInput === "WELL") {
         window.location.href = `page13english.html?score=${score}&team=${encodeURIComponent(team)}`;
       } else {
         alert("Wrong answer, try again!");
