@@ -92,22 +92,17 @@
 
       <!-- Indice -->
       <div id="hint-text" class="hidden-text">
-        Fosse, trou ou conduit aménagé dans le sol pour exploiter une ressource en eau souterraine.
+        Si 5 = E alors 13 = ?
       </div>
 
       <!-- En savoir plus -->
       <div id="more-text" class="hidden-text">
         <p>
-          Afin d'héberger et rassembler les mendiants et vagabonds, fort nombreux au début du 17e siècle à la suite de l'édit royal
-          sur l'enfermement des pauvres, le conseil de la ville de Marseille décida le 8 décembre 1622 de renfermer, dans un lieu propre,
-          les pauvres natifs de Marseille. Ce n'est qu'en 1671 que la construction du bâtiment est entamée sous la direction
-          de l'architecte Pierre Puget, un enfant du quartier devenu l'un des favoris de Louis XIV.
-          <br /><br />
-          Cet édifice, sorte de prison pour les pauvres, servit également d'asile pour les vieillards et indigents jusqu'au 19e siècle.
-          Dans les années 1940-1950, près de 150 familles y vivaient, aidées par une trentaine de Petites Sœurs des Pauvres.
-          En 1962, le bâtiment est fermé puis classé. Une série de campagnes de restauration seront lancées pour le remettre en état.
-          Aujourd'hui, il accueille plusieurs structures culturelles, dont le musée d'archéologie méditerranéenne — gratuit,
-          comme beaucoup de musées marseillais.
+         Le 25 mai 1720, le Grand Saint-Antoine, un navire revenant du Liban transportant une riche cargaison d'étoffes et de soieries orientales, entame sa quarantaine à l'île Jarre. Neuf décès sont déjà déclarés à bord, mais des marchands influents décident de faire décharger une partie de la cargaison au port avant la fin du délai.
+
+Les puces infectées par le bacille de la peste, cachées dans les tissus, contaminent rapidement Marseille. En quelques mois, 40 000 des 90 000 habitants de la ville périssent. Un tiers de la Provence est touché.
+
+Durant les jours les plus sombres, Monseigneur de Belsunce, évêque de Marseille, brave la mort pour secourir les malades. Il devient une figure emblématique de courage et de dévouement.
         </p>
       </div>
     </div>
@@ -123,9 +118,11 @@
     scoreDisplay.textContent = `Score : ${score}`;
 
     const message = `
-Poursuivez ensuite jusqu'à la place de la Charité.
-Devant l'entrée de l'Hospice, vous verrez une petite structure creuse, couverte par une plaque de fer.
-\u{1F52D} Pouvez-vous me dire ce que c'est ? J'en ai besoin pour verrouiller ma prochaine trajectoire temporelle.
+Descendez maintenant la rue, puis tournez à droite.
+Cherchez la plus grande église que vous puissiez trouver. Devant elle, une statue. Observez sa plaque…
+
+
+\u{1F52D} Sur la plaque devant la cathédrale, il y a un grand nombre de personnages entourant un homme d'église. Leur nombre équivaut à une lettre de l'alphabet. Laquelle ?
 `.trim();
 
     const container = document.getElementById("message-container");
@@ -152,7 +149,7 @@ Devant l'entrée de l'Hospice, vous verrez une petite structure creuse, couverte
 
     function checkAnswer() {
       const userInput = document.getElementById("user-response").value.trim().toUpperCase();
-      if (userInput === "PUITS") {
+      if (userInput === "M") {
         window.location.href = `page12.html?score=${score}&team=${encodeURIComponent(team)}`;
       } else {
         alert("Mauvaise réponse, essayez encore !");
