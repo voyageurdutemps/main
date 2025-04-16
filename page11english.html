@@ -83,7 +83,7 @@
     <div class="message-container" id="message-container"></div>
 
     <div id="question-container">
-      <p>Can you tell me what this is?</p>
+      <p>Their number is equivalent to a letter of the alphabet. Which one?</p>
       <input type="text" id="user-response" placeholder="Your answer here" />
       <br />
       <button onclick="checkAnswer()">Validate</button>
@@ -147,7 +147,7 @@ Look for the largest church you can find. In front of it, there is a statue. Tak
 
     function checkAnswer() {
       const userInput = document.getElementById("user-response").value.trim().toUpperCase();
-      if (userInput === "WELL") {
+      if (userInput === "M") {
         window.location.href = `page12english.html?score=${score}&team=${encodeURIComponent(team)}`;
       } else {
         alert("Wrong answer, try again!");
