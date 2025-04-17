@@ -43,7 +43,7 @@
       <button onclick="showMore()">En savoir plus</button>
 
       <!-- Indice -->
-      <div id="hint-text" class="hidden-text">Cette direction est associée au pôle magnétique de la terre</div>
+      <div id="hint-text" class="hidden-text">Cette direction est associée au pôle magnétique de la terre. Elle est également synonyme d’occidental </div>
 
       <!-- En savoir plus -->
       <div id="more-text" class="hidden-text">
@@ -75,14 +75,13 @@
     scoreDisplay.textContent = `Score : ${score}`;
 
     const message = `
-    Rue de la Bonneterie, merci cher ami.
-    L'histoire de cette maison, qui est la plus ancienne de Marseille, est assez originale. En 1954, elle a
-    été déplacée de quelques mètres et tournée de 90 degrés pour convenir au plan de restructuration du
-    quartier. C'est également une des seules maisons à avoir survécu à la destruction par dynamitage du
-    quartier, en 1943, une chance !
-    Descendez maintenant la rue Bonneterie et prenez la première à droite pour vous rendre sur
-    la place Victor Gélu. Trouvez sa plaque et dites-moi dans quelle direction il porte son
-    regard.
+    Rue de la Bonneterie, merci cher ami. L'histoire de cette maison, qui est la plus ancienne de
+Marseille, est assez originale. En 1954, elle a été déplacée de quelques mètres et tournée de 90
+degrés pour convenir au plan de restructuration du quartier. C'est également une des seules maisons
+à avoir survécu à la destruction par dynamitage du quartier, en 1943, une chance ! Descendez
+maintenant la rue Bonneterie et prenez la deuxième à droite pour vous rendre sur la place Victor
+Gélu. Vous trouverez rapidement une plaque de bronze sur un mur qui représente ce grand poète
+provençal. Pourriez-vous me dire dans quelle direction porte son regard ? 
     `.trim();
 
     const container = document.getElementById("message-container");
