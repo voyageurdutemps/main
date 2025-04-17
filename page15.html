@@ -1,64 +1,18 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Message Codé</title>
-  <link rel="stylesheet" href="responsive.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Énigme 11 - L'Ange Gabiancono</title>
+  <link rel="stylesheet" href="responsive.css">
   <style>
-    .main-content {
-      margin-top: 80px;
-      position: relative;
-      z-index: 1;
-    }
-
-    #question-container {
-      margin-top: 40px;
-    }
-
-    .hidden-text {
-      opacity: 0;
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 2s ease-in-out, opacity 1.5s ease-in-out;
-      font-size: 18px;
-      margin-top: 20px;
-      text-align: justify;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
-      font-family: "Courier New", monospace;
-    }
-
-    .parchment-effect {
-      opacity: 1 !important;
-      max-height: 1000px !important;
-    }
-
-    input {
-      padding: 10px;
-      font-size: 18px;
-      border: 2px solid #FFD700;
-      background: black;
-      color: #FFD700;
-      text-align: center;
-      width: 300px;
-    }
-
-    button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      font-size: 18px;
+    body {
       background-color: black;
       color: #FFD700;
-      border: 2px solid #FFD700;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #FFD700;
-      color: black;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
     }
 
     .team-name {
@@ -70,6 +24,7 @@
       border: 1px solid #FFD700;
       border-radius: 10px;
       font-size: 16px;
+      z-index: 1000;
     }
 
     .score-box {
@@ -81,42 +36,111 @@
       border: 1px solid #FFD700;
       border-radius: 10px;
       font-size: 16px;
+      z-index: 1000;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .message-container {
+      margin: 20px auto;
+      max-width: 800px;
+      text-align: justify;
+      line-height: 1.6;
+    }
+
+    .letter {
+      opacity: 0;
+      position: absolute;
+      transition: all 0.5s ease-in-out;
+    }
+
+    .question-container {
+      margin: 20px auto;
+      max-width: 600px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 18px;
+      width: 80%;
+      max-width: 300px;
+      margin: 10px;
+      background: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      text-align: center;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+
+    .hidden-text {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 1s ease-in-out, opacity 1s ease-in-out;
+      font-size: 18px;
+      margin: 20px auto;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+      text-align: justify;
+      max-width: 800px;
+    }
+
+    .parchment-effect {
+      opacity: 1 !important;
+      max-height: 1000px !important;
     }
   </style>
 </head>
 <body>
-
-  <div class="team-name" id="teamDisplay">Équipe : ...</div>
-  <div class="score-box" id="scoreDisplay">Score : ...</div>
-  <div class="message-container" id="message-container"></div>
+  <div class="team-name" id="teamDisplay">Équipe: ...</div>
+  <div class="score-box" id="scoreDisplay">Score: 100</div>
 
   <div class="main-content">
+    <div class="message-container" id="message-container"></div>
+
     <div id="question-container">
-      <p>
-        Cet ange a un nom, lequel ?
-      </p>
-      <input type="text" id="user-response" placeholder="Votre réponse ici" />
-      <br />
+      <p>Quel est le nom de cet ange ?</p>
+      <input type="text" id="user-response" placeholder="Votre réponse ici">
+      <br>
       <button onclick="checkAnswer()">Valider</button>
-      <button onclick="showHint()">Indice</button>
-      <button onclick="showMore()">En savoir plus sur cette rue</button>
+      <button onclick="showHint()">Indice (-5 points)</button>
+      <button onclick="showMore()">En savoir plus</button>
 
       <!-- Indice -->
       <div id="hint-text" class="hidden-text">
-        Son nom est écrit en noir sur le mur, au-dessus de son auréole.
+        Son nom est écrit sous son auréole 
       </div>
 
       <!-- En savoir plus -->
       <div id="more-text" class="hidden-text">
         <p>
-          Ce petit coin de Marseille, rendu célèbre par les nombreux tournages ayant eu lieu ici, était déjà
-          au XVIIIe siècle un lieu incontournable.
-          <br><br>
-          La place des 13 coins — autrefois appelée « place des 13 cantons » en référence à l'auberge tenue là par un Suisse —
-          était le lieu favori d'un personnage historique devenu quasiment légendaire : Casanova.
-          <br><br>
-          Il paraît que c'est ici que ce dernier aimait passer la nuit, en quête de quelques jeunes Marseillaises à séduire
-          pour assouvir ses besoins de conquête...
+          Chateaubriand raconte dans ses Mémoires d'outre-tombe : « Quand la contagion
+commença de se ralentir, M. de Belsunce, à la tête de son clergé, se transporta à l'église des
+Accoules : monté sur une esplanade d'où l'on découvrait Marseille, les campagnes, les ports et la
+mer, il donna la bénédiction, comme le pape à Rome, bénit la ville et le monde (Urbi et Orbi) :
+quelle main plus courageuse et plus pure pouvait faire descendre sur tant de malheurs les
+bénédictions du ciel ? 
         </p>
       </div>
     </div>
@@ -126,20 +150,20 @@
     const params = new URLSearchParams(window.location.search);
     let score = parseInt(params.get("score")) || 100;
     const team = params.get("team") || "Anonyme";
+    document.getElementById("teamDisplay").textContent = "Équipe: " + team;
 
-    document.getElementById("scoreDisplay").textContent = `Score : ${score}`;
-    document.getElementById("teamDisplay").textContent = `Équipe : ${team}`;
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score: ${score}`;
 
     const message = `
-Annibale, le temps est une chose aussi magnifique qu'inquiétante… mais j'ai la forte impression
-que des forces bienveillantes sont avec nous.
-
-Reviens sur tes pas, à la place des 13 coins et observe bien. Cherche, dans un rayon de vingt mètres,
-les traces qu'un ange aurait pu laisser en passant par là.
-
-Cet ange détient peut-être un outil qui permettra aux générations futures d'obtenir la clé du temps.
-
-Mais pour que je puisse l'activer, j'ai besoin de son nom…
+Monseigneur de Belsunce est représenté ici avec 13 enfants qu’il a sauvé de la mort lors de la
+ grande peste de 1720. Il frappa les esprits par son dévouement auprès des malades et ses gestes
+spectaculaires pour chasser le fléau du pays, en exorcisant la maladie depuis le clocher des
+accoules.
+Depuis la cathédrale, partez en direction de l’Est jusqu’à la rue Sainte-Françoise, et remontez-là
+jusqu’à la place des 13 coins. Cherchez dans un rayon de 20m de la place les traces qu’un ange
+aurait pu laisser en passant par là. Celui-ci doit vous donner un outil qui permettra aux générations
+futures d’obtenir la clé du temps. Cet ange à un nom, lequel ?
     `.trim();
 
     const container = document.getElementById("message-container");
@@ -167,20 +191,19 @@ Mais pour que je puisse l'activer, j'ai besoin de son nom…
     function checkAnswer() {
       const userInput = document.getElementById("user-response").value.trim().toUpperCase();
       if (userInput === "GABIANCONO") {
-        // Transmet team + score à la prochaine page
-        window.location.href = `page16.html?score=${score}&team=${encodeURIComponent(team)}`;
+        window.location.href = `enigme12.html?score=${score}&team=${encodeURIComponent(team)}`;
       } else {
-        alert("Mauvaise réponse, essayez encore !");
+        alert("Mauvaise réponse, réessayez !");
       }
     }
 
     function showHint() {
       const hintText = document.getElementById("hint-text");
       hintText.classList.add("parchment-effect");
-      if (!hintText.classList.contains("déjà-utilisé")) {
+      if (!hintText.classList.contains("already-used")) {
         score = Math.max(0, score - 5);
-        document.getElementById("scoreDisplay").textContent = `Score : ${score}`;
-        hintText.classList.add("déjà-utilisé");
+        scoreDisplay.textContent = `Score: ${score}`;
+        hintText.classList.add("already-used");
       }
     }
 
@@ -189,6 +212,5 @@ Mais pour que je puisse l'activer, j'ai besoin de son nom…
       moreText.classList.toggle("parchment-effect");
     }
   </script>
-
 </body>
-</html>
+</html> 
