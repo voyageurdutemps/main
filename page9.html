@@ -44,7 +44,7 @@
 
       <!-- Indice -->
       <div id="hint-text" class="hidden-text">
-        Je suis deux cercles qui se tiennent la main, ni tout à fait séparés, ni tout à fait unis. Couché, je deviens l’infini. Qui suis-je ?
+        Souvent, ce caveau sert de sépulcre dans les églises 
       </div>
 
       <!-- En savoir plus -->
@@ -77,24 +77,18 @@
 
     // Message principal
     const message = `
-    Eh oui, Annibale, le petit Honoré Daumier a lui aussi quelques statues à son effigie. Il est devenu
-    un grand artiste marseillais qui, à son époque, a révolutionné l'art de la caricature. Si le cœur vous en
-    dit, n'hésitez pas à en apprendre davantage sur cet homme : vous y découvrirez des caricatures qui vous
-    rappelleront le feu sacré et révolutionnaire qui l'animait lors de nos conversations à table.
-  
-    Sa statue se trouve devant l'hôtel Intercontinental. Un jour prochain, en 2057 si ma mémoire est bonne, il deviendra un casino mais à notre
-    époque, vous le savez, c'était un hôpital. Le premier hôpital laïc de la région, c'est-à-dire avec un
-    personnel non religieux.
-    
-    En parlant de religion justement… il est temps pour vous de vous rendre près de l'église des Accoules,
-    située à quelques dizaines de mètres sur ta gauche.
- 
-    Le son, Annibal… le son m'est d'une importance capitale.
-    Les cloches de cette église rythment la ville, mais aussi le temps. Pour réussir à calibrer un
-    passage temporel depuis ma position, j'ai besoin de pouvoir anticiper les sons réguliers que ces
-    clochers produisent à l'époque dans laquelle vous vous trouvez.
-   
-    Pouvez-vous me dire combien de cloches se trouvent encore là, aujourd'hui ?
+    Honoré Daumier avait en effet 70 ans le jour de sa mort, et était devenu quasiment aveugle, un
+comble pour un des plus grands caricaturistes de son temps ! Je me rappelle de son franc parler et
+de son indéniable talent de dessinateur lors de mon passage à Marseille sous Napoléon III. Sa vie
+est un vrai roman, n’hésitez pas à vous renseigner sur cet homme quand vous en aurez l’occasion
+Annibale. Sa statue se trouve devant l’Hôtel Dieu, qui comme vous le savez fut un des premiers
+hôpitaux laïcs de France. Imaginez-vous qu’un jour cet hôpital deviendra un hôtel de luxe. Suivez
+les nombres, suivez les mots. Je vous sais bon chrétien, aussi rendez-vous à l’église en bas de la
+montée des accoules, en direction du vieux port. Cette église, jadis grandiose, n’est depuis la
+révolution qu’un amas de débris et des ruines. À votre époque, on y a reconstruit une chapelle
+souterraine, qui porte un nom qui vous sera familier car il n’est pas sans rappeler les boites dans
+lesquelles j’enferme mes clés du temps. 
+Pourriez-vous m’indiquer ce nom ? 
     `.trim();
 
     const container = document.getElementById("message-container");
@@ -133,7 +127,7 @@
 
     function checkAnswer() {
       const userInput = document.getElementById("user-response").value.trim();
-      if (userInput === "8") {
+      if (userInput === "CRYPTE") {
         window.location.href = `page10.html?score=${score}&team=${encodeURIComponent(team)}`;
       } else {
         alert("Mauvaise réponse, essayez encore !");
