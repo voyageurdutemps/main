@@ -83,7 +83,8 @@
     <div class="message-container" id="message-container"></div>
 
     <div id="question-container">
-      <p>Leur nombre équivaut à une lettre de l'alphabet. Laquelle ?</p>
+      <p>Combien sont-ils ? Ce
+nombre équivaut à une lettre de l’alphabet, qui vous servira pour ouvrir le cryptex.</p>
       <input type="text" id="user-response" placeholder="Votre réponse ici" />
       <br />
       <button onclick="checkAnswer()">Valider</button>
@@ -118,11 +119,13 @@ Durant les jours les plus sombres, Monseigneur de Belsunce, évêque de Marseill
     scoreDisplay.textContent = `Score : ${score}`;
 
     const message = `
-Descendez maintenant la rue, puis tournez à droite.
-Cherchez la plus grande église que vous puissiez trouver. Devant elle, une statue. Observez sa plaque…
+Sortez du magasin, avancez de 20 m vers l’ouest puis descendez la rue de la Cathédrale pour vous
+rendre dans l’enceinte de ce grand édifice imaginé par Henri-Jacques Espérandieu. Une statue d’un
+évêque, monseigneur de Belsunce, s’y trouve. 
 
 
-\u{1F52D} Sur la plaque devant la cathédrale, il y a un grand nombre de personnages entourant un homme d'église. 
+\u{1F52D} Observez bien la plaque qui se trouve en dessous de
+sa statue. On y voit un homme d’église entouré de nombreux personnages. 
 `.trim();
 
     const container = document.getElementById("message-container");
