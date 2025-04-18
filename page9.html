@@ -44,7 +44,7 @@
 
       <!-- Indice -->
       <div id="hint-text" class="hidden-text">
-        Souvent, ce caveau sert de sépulcre dans les églises 
+        Souvent, ce caveau sert de sépulcre dans les églises. 
       </div>
 
       <!-- En savoir plus -->
@@ -127,7 +127,7 @@ Pourriez-vous m’indiquer ce nom ?
 
     function checkAnswer() {
       const userInput = document.getElementById("user-response").value.trim();
-      if (userInput === "CRYPTE") {
+      if (userInput === "crypte") {
         window.location.href = `page10.html?score=${score}&team=${encodeURIComponent(team)}`;
       } else {
         alert("Mauvaise réponse, essayez encore !");
