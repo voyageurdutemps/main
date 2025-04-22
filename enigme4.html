@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Énigme 4 - La Rue de la Bonneterie</title>
+  <link rel="stylesheet" href="responsive.css">
+  <style>
+    body {
+      background-color: black;
+      color: #FFD700;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .score-box {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .message-container {
+      margin: 20px auto;
+      max-width: 800px;
+      text-align: justify;
+      line-height: 1.6;
+    }
+
+    .letter {
+      opacity: 0;
+      position: absolute;
+      transition: all 0.5s ease-in-out;
+    }
+
+    .question-container {
+      margin: 20px auto;
+      max-width: 600px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 18px;
+      width: 80%;
+      max-width: 300px;
+      margin: 10px;
+      background: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      text-align: center;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+
+    .hidden-text {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 1s ease-in-out, opacity 1s ease-in-out;
+      font-size: 18px;
+      margin: 20px auto;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+      text-align: justify;
+      max-width: 800px;
+    }
+
+    .parchment-effect {
+      opacity: 1 !important;
+      max-height: 1000px !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="team-name" id="teamDisplay">Équipe: ...</div>
+  <div class="score-box" id="scoreDisplay">Score: 100</div>
+
+  <div class="main-content">
+    <div class="message-container" id="message-container"></div>
+
+    <div id="question-container">
+      <p>Quel est le nom de la rue qui a remplacé la passe Saint-Augustin ?</p>
+      <input type="text" id="user-response" placeholder="Votre réponse ici">
+      <br>
+      <button onclick="checkAnswer()">Valider</button>
+      <button onclick="showHint()">Indice (-5 points)</button>
+      <button onclick="showMore()">En savoir plus</button>
+
+      <!-- Indice -->
+      <div id="hint-text" class="hidden-text">
+        Cette rue est liée à un métier traditionnel du textile.
+      </div>
+
+      <!-- En savoir plus -->
+      <div id="more-text" class="hidden-text">
+        <p>
+          Cette maison tient son nom de son ancien propriétaire, Bastien Cabre. Le bâtiment
+  de presque 500 ans possède la grande particularité d’avoir été déplacé d’un seul bloc au cours de
+ l’été 1954 sur un angle de 90 degrés, pour être placé dans l’alignement de la Grand Rue, où il fait
+ l’angle avec celle de la Bonneterie. Le nom des deux rues figure sur le même mur de la maison,
+ dont un est gravé dans la pierre et l’autre sur un simple panneau. Une contradiction qui résume son
+ emplacement avant sa rotation et son déplacement. Sa façade imposante et ses fenêtres à meneaux
+ lui ont permis de faire l’objet d’un classement au titre de Monument historique par arrêté du 2 mai
+ 1941. Le reste étant déjà inscrit depuis novembre 1926.
+L’autre originalité de cette maison, conservée miraculeusement depuis le 16ème siècle, c’est qu’elle
+ a échappé à la volonté des Nazis sur l’ordre d’Hitler de raser le Vieux-Port pendant l’Occupation
+ en 1943. En effet, durant l’hiver 1943, l’occupant nazi profite de l’aide du gouvernement français
+ pour mettre en oeuvre un grand plan de restructuration de Marseille, considérée comme un repaire
+ de résistants, juifs, tziganes et de malfrats en tout genre. Ce plan existait déjà dans les années 1920,
+ mais il fallut attendre l’appuis de nazis pour le mettre en oeuvre. Plus de 20 000 Marseillais furent
+ expropriés, 1642 déportés et assassinés et 1 500 immeubles détruits.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonyme";
+    document.getElementById("teamDisplay").textContent = "Équipe: " + team;
+
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score: ${score}`;
+
+    const message = `
+Honoré Daumier avait en effet 70 ans le jour de sa mort, et était devenu quasiment aveugle, un comble pour un des plus grands caricaturistes de son temps ! Je me rappelle de son franc parler et de son indéniable talent de dessinateur lors de mon passage à Marseille sous Napoléon III. Sa vie est un vrai roman, n'hésitez pas à vous renseigner sur cet homme quand vous en aurez l'occasion Annibale. Sa statue se trouve devant l'Hôtel Dieu, qui comme vous le savez fut un des premiers hôpitaux laïcs de France. Imaginez-vous qu'un jour cet hôpital deviendra un hôtel de luxe. En parlant d'hôtel d'ailleurs, traversez la rue et continuez vers l'est pendant une centaine de pas. Vous trouverez l'hôtel de Cabre, une des plus vieilles maisons de la ville, qui est d'ailleurs souvent en travaux. Saviez-vous qu'avant la guerre, elle se trouvait sur la passe Saint-Augustin ? Quel est le nom de la rue qui a remplacé la passe ?
+    `.trim();
+
+    const container = document.getElementById("message-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+      const letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+      container.appendChild(letterSpan);
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${index % 2 === 0 ? "10px" : "-10px"}) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 2);
+    }
+
+    letters.forEach((char, index) => createLetterAnimation(index, char));
+
+    function checkAnswer() {
+      const userInput = document.getElementById("user-response").value.trim().toUpperCase();
+      if (userInput === "BONNETERIE") {
+        window.location.href = `enigme5.html?score=${score}&team=${encodeURIComponent(team)}`;
+      } else {
+        alert("Mauvaise réponse, réessayez !");
+      }
+    }
+
+    function showHint() {
+      const hintText = document.getElementById("hint-text");
+      hintText.classList.add("parchment-effect");
+      if (!hintText.classList.contains("already-used")) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score: ${score}`;
+        hintText.classList.add("already-used");
+      }
+    }
+
+    function showMore() {
+      const moreText = document.getElementById("more-text");
+      moreText.classList.toggle("parchment-effect");
+    }
+  </script>
+</body>
+</html> 

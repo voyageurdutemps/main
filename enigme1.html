@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Énigme 1 - Le Message Mystérieux</title>
+  <link rel="stylesheet" href="responsive.css">
+  <style>
+    body {
+      background-color: black;
+      color: #FFD700;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .score-box {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .message-container {
+      margin: 20px auto;
+      max-width: 800px;
+      text-align: justify;
+      line-height: 1.6;
+    }
+
+    .letter {
+      opacity: 0;
+      position: absolute;
+      transition: all 0.5s ease-in-out;
+    }
+
+    .question-container {
+      margin: 20px auto;
+      max-width: 600px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 18px;
+      width: 80%;
+      max-width: 300px;
+      margin: 10px;
+      background: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      text-align: center;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+
+    .hidden-text {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 1s ease-in-out, opacity 1s ease-in-out;
+      font-size: 18px;
+      margin: 20px auto;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+      text-align: justify;
+      max-width: 800px;
+    }
+
+    .parchment-effect {
+      opacity: 1 !important;
+      max-height: 1000px !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="team-name" id="teamDisplay">Équipe: ...</div>
+  <div class="score-box" id="scoreDisplay">Score: 100</div>
+
+  <div class="main-content">
+    <div class="message-container" id="message-container"></div>
+
+    <div id="question-container">
+      <p>Cet indice est d'une importance CAPITAL </p>
+      <input type="text" id="user-response" placeholder="Votre réponse ici">
+      <br>
+      <button onclick="checkAnswer()">Valider</button>
+      <button onclick="showHint()">Réponse (-5 points)</button>
+      <button onclick="showMore()">En savoir plus</button>
+
+      <!-- Indice -->
+      <div id="hint-text" class="hidden-text">
+        EGLISE DES ACCOULES
+      </div>
+
+      <!-- En savoir plus -->
+      <div id="more-text" class="hidden-text">
+        <p>
+          L'église des Accoules est un lieu historique important de Marseille. Construite au XIIIe siècle,
+          elle a été détruite pendant la Révolution française. Aujourd'hui, seuls quelques vestiges sont
+          visibles, dont une crypte qui a été reconstruite. Cette église était autrefois un lieu de culte
+          majeur dans le quartier du Panier.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonyme";
+    document.getElementById("teamDisplay").textContent = "Équipe: " + team;
+
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score: ${score}`;
+
+    const message = `
+mon cher annibale,
+le temps presse. j’ai besoin de vous.
+j’espère qu’à travers les âges, le souvenir de nos jours à alexandrie
+rallumera en vous une Étincelle, malgré la fatiGue des années.
+je suis coincé à Marseille, pLus de 2000 ans avant votre époque.
+ma clef du temps est InutiliSable ici – une faille temporellE en bloque
+l’activation.
+seule solution : ouvrir le cryptex Dans votre présent, avec cEs lettreS :
+_ _ _ _ l _
+il se peut que les lettres ne vous pArviennent pas entières – le
+protoCole SMTP vient tout juste d’être inventé, mes mots errent dans
+l'infini du TCP/IP.
+trouvez mes énigmes sur la toile. rassemblez-les. résolvez-les.
+le destin du Continuum spatiO-temporel en dépend.
+qUe Le tEmpS soit votre allié.
+votre éternel ami,
+    `.trim();
+
+    const container = document.getElementById("message-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+      const letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+      container.appendChild(letterSpan);
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${index % 2 === 0 ? "10px" : "-10px"}) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 2);
+    }
+
+    letters.forEach((char, index) => createLetterAnimation(index, char));
+
+    function checkAnswer() {
+      const userInput = document.getElementById("user-response").value.trim().toUpperCase();
+      if (userInput === "EGLISE DES ACCOULES") {
+        window.location.href = `enigme2.html?score=${score}&team=${encodeURIComponent(team)}`;
+      } else {
+        alert("Mauvaise réponse, réessayez !");
+      }
+    }
+
+    function showHint() {
+      const hintText = document.getElementById("hint-text");
+      hintText.classList.add("parchment-effect");
+      if (!hintText.classList.contains("already-used")) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score: ${score}`;
+        hintText.classList.add("already-used");
+      }
+    }
+
+    function showMore() {
+      const moreText = document.getElementById("more-text");
+      moreText.classList.toggle("parchment-effect");
+    }
+  </script>
+</body>
+</html> 

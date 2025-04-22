@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Énigme 8 - La Lettre du Pavillon</title>
+  <link rel="stylesheet" href="responsive.css">
+  <style>
+    body {
+      background-color: black;
+      color: #FFD700;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .score-box {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .message-container {
+      margin: 20px auto;
+      max-width: 800px;
+      text-align: justify;
+      line-height: 1.6;
+    }
+
+    .letter {
+      opacity: 0;
+      position: absolute;
+      transition: all 0.5s ease-in-out;
+    }
+
+    .question-container {
+      margin: 20px auto;
+      max-width: 600px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 18px;
+      width: 80%;
+      max-width: 300px;
+      margin: 10px;
+      background: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      text-align: center;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+
+    .hidden-text {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 1s ease-in-out, opacity 1s ease-in-out;
+      font-size: 18px;
+      margin: 20px auto;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+      text-align: justify;
+      max-width: 800px;
+    }
+
+    .parchment-effect {
+      opacity: 1 !important;
+      max-height: 1000px !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="team-name" id="teamDisplay">Équipe: ...</div>
+  <div class="score-box" id="scoreDisplay">Score: 100</div>
+
+  <div class="main-content">
+    <div class="message-container" id="message-container"></div>
+
+    <div id="question-container">
+      <p>Quelle lettre apparaît deux fois dans le nom du pavillon des douanes ?</p>
+      <input type="text" id="user-response" placeholder="Votre réponse ici">
+      <br>
+      <button onclick="checkAnswer()">Valider</button>
+      <button onclick="showHint()">Indice (-5 points)</button>
+      <button onclick="showMore()">En savoir plus</button>
+
+      <!-- Indice -->
+      <div id="hint-text" class="hidden-text">
+        Cette lettre est une consonne qui apparaît à la fois dans "Pavillon" et "douanes".
+      </div>
+
+      <!-- En savoir plus -->
+      <div id="more-text" class="hidden-text">
+        <p>
+          Le pavillon des douanes a été construit en 1719 pour servir au contrôle sanitaire des navires
+          rentrant dans le port de Marseille. Malheureusement, cela n'a pas empêché la peste de ravager
+          la Provence un an plus tard. Le bâtiment est un témoignage de l'architecture du 18e siècle
+          et de l'importance du contrôle sanitaire dans l'histoire du port de Marseille.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonyme";
+    document.getElementById("teamDisplay").textContent = "Équipe: " + team;
+
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score: ${score}`;
+
+    const message = `
+Des poignées, bien vu ! Ces portes ne s'ouvrent que de l'intérieur, auquel on accède depuis l'arrière du bâtiment. Saviez-vous que lors de sa construction sous Louis XIV, le rez-de-chaussée et le premier étage ne furent pas reliés par un escalier ? En effet, le roi soleil voulait ainsi montrer que l'autorité royale, qui occupait le premier étage, était au dessus de l'autorité des notables marseillais qui occupaient le rez-de-chaussée. Le seul moyen d'arriver au premier étage était par une passerelle, accessible depuis un autre bâtiment. Le roi voulait s'assurer du respect de son autorité dans ces régions rebelles, c'est d'ailleurs pour cela qu'il a fait construire les trois forts que vous pouvez apercevoir à l'embouchure du port, et en haut de la colline Notre-Dame. Suivez les quais en direction de l'ouest, jusqu'à atteindre la grande Tour du roi René. Quelques dizaines de mètres avant de l'atteindre, vous tomberez sur le pavillon des douanes. Le pavillon des douanes porte un autre nom, indiqué sur les faces est et ouest du bâtiment. Une seule lettre apparaît deux fois dans ce nom. Quelle est-elle ?
+    `.trim();
+
+    const container = document.getElementById("message-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+      const letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+      container.appendChild(letterSpan);
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${index % 2 === 0 ? "10px" : "-10px"}) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 2);
+    }
+
+    letters.forEach((char, index) => createLetterAnimation(index, char));
+
+    function checkAnswer() {
+      const userInput = document.getElementById("user-response").value.trim().toUpperCase();
+      if (userInput === "T") {
+        window.location.href = `enigme9.html?score=${score}&team=${encodeURIComponent(team)}`;
+      } else {
+        alert("Mauvaise réponse, réessayez !");
+      }
+    }
+
+    function showHint() {
+      const hintText = document.getElementById("hint-text");
+      hintText.classList.add("parchment-effect");
+      if (!hintText.classList.contains("already-used")) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score: ${score}`;
+        hintText.classList.add("already-used");
+      }
+    }
+
+    function showMore() {
+      const moreText = document.getElementById("more-text");
+      moreText.classList.toggle("parchment-effect");
+    }
+  </script>
+</body>
+</html> 

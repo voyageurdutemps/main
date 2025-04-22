@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riddle 4 - The Historical Building</title>
+  <link rel="stylesheet" href="responsive.css">
+  <style>
+    body {
+      background-color: black;
+      color: #FFD700;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .team-name {
+      position: fixed;
+      top: 10px;
+      left: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .score-box {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 10px 20px;
+      border: 1px solid #FFD700;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+    }
+
+    .main-content {
+      margin-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .message-container {
+      margin: 20px auto;
+      max-width: 800px;
+      text-align: justify;
+      line-height: 1.6;
+    }
+
+    .letter {
+      opacity: 0;
+      position: absolute;
+      transition: all 0.5s ease-in-out;
+    }
+
+    .question-container {
+      margin: 20px auto;
+      max-width: 600px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 18px;
+      width: 80%;
+      max-width: 300px;
+      margin: 10px;
+      background: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      text-align: center;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+
+    .hidden-text {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 1s ease-in-out, opacity 1s ease-in-out;
+      font-size: 18px;
+      margin: 20px auto;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+      text-align: justify;
+      max-width: 800px;
+    }
+
+    .parchment-effect {
+      opacity: 1 !important;
+      max-height: 1000px !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="team-name" id="teamDisplay">Team: ...</div>
+  <div class="score-box" id="scoreDisplay">Score: 100</div>
+
+  <div class="main-content">
+    <div class="message-container" id="message-container"></div>
+
+    <div id="question-container">
+      <p>What is the name of the street that replaced the Saint-Augustin pass?</p>
+      <input type="text" id="user-response" placeholder="Your answer here">
+      <br>
+      <button onclick="checkAnswer()">Validate</button>
+      <button onclick="showHint()">Hint (-5 points)</button>
+      <button onclick="showMore()">Learn more</button>
+
+      <!-- Hint -->
+      <div id="hint-text" class="hidden-text">
+        This street is linked to a traditional textile profession.
+      </div>
+
+      <!-- Learn more -->
+      <div id="more-text" class="hidden-text">
+        <p>
+          This house takes its name from its former owner, Bastien Cabre. The almost 500-year-old building has the remarkable distinction of having been moved in one piece during the summer of 1954 at a 90-degree angle, to be placed in line with Grand Rue, where it forms the corner of Bonneterie Street. The names of both streets appear on the same wall of the house, one engraved in stone and the other on a simple sign. A contradiction that sums up its location before its rotation and relocation. Its imposing façade and mullioned windows allowed it to be listed as a Historic Monument by decree of May 2, 1941. The rest of the building had already been listed since November 1926. The other unique feature of this house, miraculously preserved since the 16th century, is that it escaped the Nazis' orders to raze the Old Port during the Occupation in 1943. Indeed, during the winter of 1943, the Nazi occupiers took advantage of the help of the French government to implement a major restructuring plan for Marseille, considered a haven for resistance fighters, Jews, Roma, and criminals of all kinds. This plan already existed in the 1920s, but it was not until Nazi support that it was implemented. More than 20,000 Marseillais were expropriated, 1,642 deported and murdered, and 1,500 buildings destroyed.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    let score = parseInt(params.get("score")) || 100;
+    const team = params.get("team") || "Anonymous";
+    document.getElementById("teamDisplay").textContent = "Team: " + team;
+
+    const scoreDisplay = document.getElementById("scoreDisplay");
+    scoreDisplay.textContent = `Score: ${score}`;
+
+    const message = `
+Honoré Daumier was indeed 70 years old on the day of his death, and had become almost blind, a shame for one of the greatest caricaturists of his time! I remember his frankness and his undeniable talent as a draftsman during my visit to Marseille under Napoleon III. His life is a true novel, do not hesitate to find out more about this man when you have the opportunity Annibale. His statue is in front of the Hôtel Dieu, which as you know was one of the first secular hospitals in France. Imagine that one day this hospital will become a luxury hotel. Speaking of hotels, cross the street and continue east for about a hundred paces. You will find the Hôtel de Cabre, one of the oldest houses in the city, which is often under construction. Did you know that before the war, it was located on the Saint-Augustin pass? What is the name of the street that replaced the pass?
+    `.trim();
+
+    const container = document.getElementById("message-container");
+    const letters = message.split("");
+
+    function createLetterAnimation(index, char) {
+      if (char === "\n") return;
+      const letterSpan = document.createElement("span");
+      letterSpan.classList.add("letter");
+      letterSpan.textContent = char;
+      letterSpan.style.top = `${Math.random() * 100}%`;
+      letterSpan.style.left = `${Math.random() * 100}%`;
+      container.appendChild(letterSpan);
+      setTimeout(() => {
+        letterSpan.style.opacity = "1";
+        letterSpan.style.transform = `translate(${index * 10}px, ${index % 2 === 0 ? "10px" : "-10px"}) scale(1.2)`;
+        letterSpan.style.left = "0";
+        letterSpan.style.top = "0";
+        letterSpan.style.position = "relative";
+      }, index * 2);
+    }
+
+    letters.forEach((char, index) => createLetterAnimation(index, char));
+
+    function checkAnswer() {
+      const userInput = document.getElementById("user-response").value.trim().toUpperCase();
+      if (userInput === "BONNETERIE") {
+        window.location.href = `enigme5english.html?score=${score}&team=${encodeURIComponent(team)}`;
+      } else {
+        alert("Wrong answer, try again!");
+      }
+    }
+
+    function showHint() {
+      const hintText = document.getElementById("hint-text");
+      hintText.classList.add("parchment-effect");
+      if (!hintText.classList.contains("already-used")) {
+        score = Math.max(0, score - 5);
+        scoreDisplay.textContent = `Score: ${score}`;
+        hintText.classList.add("already-used");
+      }
+    }
+
+    function showMore() {
+      const moreText = document.getElementById("more-text");
+      moreText.classList.toggle("parchment-effect");
+    }
+  </script>
+</body>
+</html> 

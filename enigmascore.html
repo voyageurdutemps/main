@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Score final</title>
+  <style>
+    body {
+      background-color: black;
+      color: #FFD700;
+      font-family: "Courier New", monospace;
+      text-align: center;
+      padding: 40px;
+    }
+
+    button {
+      margin: 15px;
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: black;
+      color: #FFD700;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #FFD700;
+      color: black;
+    }
+
+    .section {
+      margin-top: 40px;
+    }
+
+    .hidden-text {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 1.5s ease-in-out, opacity 1.5s ease-in-out;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+      font-size: 16px;
+      text-align: justify;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .parchment-effect {
+      opacity: 1 !important;
+      max-height: 1000px !important;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎉 Bravo, équipe <span id="teamName"></span> !</h1>
+  <p>Vous avez terminé l'aventure avec :</p>
+  <p><strong id="finalScore"></strong> points</p>
+  <p>Date : <span id="finalDate"></span></p>
+
+  <div class="section">
+    <a href="index.html">
+      <button>📊 Voir mon classement</button>
+    </a>
+  </div>
+
+  <div class="section">
+    <a href="https://www.instagram.com/votrepage/" target="_blank">
+      <button>📷 Partager sur Instagram</button>
+    </a>
+    <p>Abonnez-vous pour les prochaines missions dans les autres villes !<br>
+      Postez votre photo sous l’ange avec les hashtags :</p>
+    <p><strong>#GABIANCONO #VOYAGEURDUTEMPSMARSEILLE</strong></p>
+  </div>
+
+  <div class="section">
+    <button onclick="toggleText('consigne')">📦 Consigne de fin de jeu</button>
+    <div id="consigne" class="hidden-text">
+      <ul>
+        <li>Remettre le mot que contient le cryptex à l’intérieur,</li>
+        <li>Refermer le cryptex en brouillant les lettres de sorte à ne pas laisser apparaître le mot <strong>TEMPLE</strong>,</li>
+        <li>Remettre le cryptex dans la boîte du magasin et refermer la boîte en brouillant le code inscrit sur celle-ci.</li>
+      </ul>
+      <p><em>Votre caution vous sera automatiquement restituée dans un délai de 7 jours.</em></p>
+    </div>
+  </div>
+
+  <div class="section">
+    <button onclick="toggleText('conseil')">🗺️ Que faire ensuite ?</button>
+    <div id="conseil" class="hidden-text">
+      <p>Si l’histoire de Marseille t’a plu, voici quelques idées pour prolonger ta visite :</p>
+      <ul>
+        <li>Le <strong>Mucem</strong>, juste à côté en bord de mer : un incontournable !</li>
+        <li>Traverse la passerelle jusqu'à la statue du <strong>chevalier Roze</strong>, héros de la peste.</li>
+        <li>Visite les <strong>musées gratuits de l’Hospice de la Vieille Charité</strong>.</li>
+        <li>Découvre aussi le <strong>musée d’histoire naturelle</strong> au parc Longchamp.</li>
+        <li>Ou simplement, savoure un café sur la <strong>place des 13 coins</strong> au cœur du Panier.</li>
+      </ul>
+      <p>Bonne exploration ! 🧭</p>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const team = params.get("team") || "Anonyme";
+    const score = parseInt(params.get("score")) || 0;
+    const date = new Date().toLocaleString("fr-FR");
+
+    document.getElementById("teamName").textContent = team;
+    document.getElementById("finalScore").textContent = score;
+    document.getElementById("finalDate").textContent = date;
+
+    // 🔗 URL de ton Apps Script Web App
+    const scriptURL = "https://script.google.com/macros/s/AKfycbzVtTYSFIpq0CFPIiVmJZHGja2RLtNXyH-Ayny9RMqYEVhn9q3h6S8DujplNk52WHPYmg/exec";
+
+    // Envoi automatique du score
+    fetch(scriptURL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ team, score, date })
+    }).catch(err => {
+      console.error("Erreur d'envoi vers Google Sheets :", err);
+    });
+
+    function toggleText(id) {
+      document.getElementById(id).classList.toggle("parchment-effect");
+    }
+  </script>
+
+</body>
+</html>
