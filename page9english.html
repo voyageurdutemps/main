@@ -131,14 +131,15 @@
 
     letters.forEach((char, index) => createLetterAnimation(index, char));
 
-    function checkAnswer() {
-      const userInput = document.getElementById("user-response").value.trim();
-      if (userInput === "8") {
-        window.location.href = `page10english.html?score=${score}&team=${encodeURIComponent(team)}`;
-      } else {
-        alert("Wrong answer, try again!");
-      }
-    }
+  
+      function checkAnswer() {
+  const userInput = document.getElementById("user-response").value.trim().toLowerCase();
+  if (userInput.includes("rypt")) {
+    window.location.href = `page10english.html?score=${score}&team=${encodeURIComponent(team)}`;
+  } else {
+    alert("Wrong answer, try again!");
+  }
+}
 
     let hintUsed = false;
     function showHint() {
