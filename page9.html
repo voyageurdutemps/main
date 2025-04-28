@@ -125,14 +125,15 @@ Pourriez-vous m’indiquer ce nom ?
 
     letters.forEach((char, index) => createLetterAnimation(index, char));
 
-    function checkAnswer() {
-      const userInput = document.getElementById("user-response").value.trim();
-      if (userInput === "crypte") {
-        window.location.href = `page10.html?score=${score}&team=${encodeURIComponent(team)}`;
-      } else {
-        alert("Mauvaise réponse, essayez encore !");
-      }
-    }
+  
+     function checkAnswer() {
+  const userInput = document.getElementById("user-response").value.trim().toLowerCase();
+  if (userInput.includes("rypt")) {
+    window.location.href = `page10.html?score=${score}&team=${encodeURIComponent(team)}`;
+  } else {
+    alert("Mauvaise réponse, réessayez !");
+  }
+}
 
     let hintUsed = false;
     function showHint() {
