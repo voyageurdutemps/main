@@ -180,14 +180,15 @@ Annibale, c'est moi votre ami, si vous lisez ce message, c'est que je suis en tr
 
     letters.forEach((char, index) => createLetterAnimation(index, char));
 
-    function checkAnswer() {
-      const userInput = document.getElementById("user-response").value.trim().toUpperCase();
-      if (userInput === "CRYPTE") {
-        window.location.href = `enigme3.html?score=${score}&team=${encodeURIComponent(team)}`;
-      } else {
-        alert("Mauvaise réponse, réessayez !");
-      }
-    }
+
+     function checkAnswer() {
+  const userInput = document.getElementById("user-response").value.trim().toLowerCase();
+  if (userInput.includes("rypt")) {
+    window.location.href = `enigme3.html?score=${score}&team=${encodeURIComponent(team)}`;
+  } else {
+    alert("Mauvaise réponse, réessayez !");
+  }
+}
 
     function showHint() {
       const hintText = document.getElementById("hint-text");
